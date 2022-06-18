@@ -1,2 +1,3 @@
 # FashionLine-Django-MySQL
-Proyecto fin de grado, una pagina web
+Proyecto fin de grado
+Una pagina compra venta con chat
