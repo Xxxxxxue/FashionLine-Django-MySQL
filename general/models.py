@@ -63,6 +63,7 @@ class Clientes(models.Model):
 
     class Meta:
         managed = False
+        ordering = ['-id']
         db_table = 'clientes'
 
 
@@ -280,6 +281,7 @@ class Productos(models.Model):
 
     class Meta:
         managed = False
+        ordering = ['-id']
         db_table = 'productos'
 
 
@@ -392,6 +394,7 @@ class Usuarios(models.Model):
 
     class Meta:
         managed = False
+        ordering = ['-id']
         db_table = 'usuarios'
 
 

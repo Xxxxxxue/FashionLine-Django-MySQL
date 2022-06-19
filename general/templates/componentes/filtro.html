@@ -60,7 +60,6 @@
                     </a>
                     <div class="dropdown-menu filtro-menu" aria-labelledby="dropdownMenuLink2">
                         {%for g in tipo%}
-<<<<<<< HEAD
                             {%if g.tipo != 'usuarios'%}
                             <div class="dropdown-divider"></div>
                             <p><input class="mx-2" type="checkbox" name="{{g.tipo|capfirst}}">
@@ -75,20 +74,6 @@
                                 {%endfor%}
                             </p>
                             {%endif%}
-=======
-                        <div class="dropdown-divider"></div>
-                        <p><input class="mx-2" type="checkbox" name="{{g.tipo|capfirst}}">
-                           <b>{{g.tipo|capfirst}}</b>
-                            <div class="dropdown-divider"></div>
-                            {%for cat in categorias%}
-                            {%if cat.idtipocad == g%}
-                            <p><input class="mx-2" type="checkbox" name="{{cat.categoria|capfirst}}">
-                                {{cat.categoria|capfirst}}
-                            </p>
-                            {%endif%}
-                            {%endfor%}
-                        </p>
->>>>>>> d26d397246fc07fcc07cfe01c1d5066d7d8b27fe
                         {% endfor %}
                     </div>
                 </div>

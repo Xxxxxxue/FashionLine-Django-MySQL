@@ -4,25 +4,16 @@
 {%block title%}Diseños | Fashion Line{%endblock%}
 
 {% block main %}
-<<<<<<< HEAD
     {%include "componentes/navigation.html"%}
-=======
-    {%include "componentes/navigation.html" with tipo=tipo categoria=categoria%}
->>>>>>> d26d397246fc07fcc07cfe01c1d5066d7d8b27fe
 
     <!--CUERPO-->
     <!--CUERPO DE PRODUCTOS-->
     <div class="container-fluid m-0 p-0">
+
         <!--Parte filtro Collapse-->
-<<<<<<< HEAD
         {%include "componentes/filtro.html"%}
         <!--Cards de productos-->
         {%include "componentes/card-diseno.html"%}
-=======
-        {%include "componentes/filtro.html" with tipo=tipo categorias=categorias color=color talla=talla valoracion=valoracion%}
-        <!--Cards de productos-->
-        {%include "componentes/card-producto.html" with imagenes=imagenes productos=productos%}
->>>>>>> d26d397246fc07fcc07cfe01c1d5066d7d8b27fe
 
         <!--paginacion-->
         {%include "componentes/paginacion.html" %}
