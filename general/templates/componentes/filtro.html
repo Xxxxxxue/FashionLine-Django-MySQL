@@ -1,0 +1,110 @@
+{%load static%}
+<!--Parte filtro Collapse-->
+<div class="filtrodiv" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+     aria-controls="collapseExample">
+    <img class="filtroimg" src="{% static 'imagenes/collapse.png'%}" alt="">
+</div>
+<div class="collapse" id="collapseExample">
+    <div class="card card-body  collapse-filtro">
+        <div class="container-fluid row">
+            <div class="col m-3">
+                <div class="dropdown show">
+                    <a class="btn btn-secondary dropdown-toggle dropdown-color " href="#" role="button"
+                       id="dropdownMenuLink"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Color
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        {%for c in color%}
+                        <p><input class="mx-2" type="checkbox" name="{{c.color|capfirst}}">{{c.color|capfirst}}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col m-3">
+                <div class="dropdown show">
+                    <a class="btn btn-secondary dropdown-toggle dropdown-color" href="#" role="button"
+                       id="dropdownMenuLink1"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Talla
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink1" x-placement="bottom-start">
+                        {%for t in talla%}
+                        <p><input class="mx-2" type="checkbox" name="{{t.talla|capfirst}}">{{t.talla|capfirst}}
+                        </p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col m-3">
+                <div class="dropdown show">
+                    <a class="btn btn-secondary dropdown-toggle dropdown-color" href="#" role="button"
+                       id="dropdownMenuLink3"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Valoración
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink3">
+                        {%for v in valoracion%}
+                        <p><input class="mx-2" type="checkbox" name="{{v.nombre|capfirst}}">{{v.nombre|capfirst}}
+                        </p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col m-3">
+                <div class="dropdown show">
+                    <a class="btn btn-secondary dropdown-toggle dropdown-color" href="#" role="button"
+                       id="dropdownMenuLink2"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Categoria
+                    </a>
+                    <div class="dropdown-menu filtro-menu" aria-labelledby="dropdownMenuLink2">
+                        {%for g in tipo%}
+<<<<<<< HEAD
+                            {%if g.tipo != 'usuarios'%}
+                            <div class="dropdown-divider"></div>
+                            <p><input class="mx-2" type="checkbox" name="{{g.tipo|capfirst}}">
+                               <b>{{g.tipo|capfirst}}</b>
+                                <div class="dropdown-divider"></div>
+                                {%for cat in categorias%}
+                                {%if cat.idtipocad == g%}
+                                <p><input class="mx-2" type="checkbox" name="{{cat.categoria|capfirst}}">
+                                    {{cat.categoria|capfirst}}
+                                </p>
+                                {%endif%}
+                                {%endfor%}
+                            </p>
+                            {%endif%}
+=======
+                        <div class="dropdown-divider"></div>
+                        <p><input class="mx-2" type="checkbox" name="{{g.tipo|capfirst}}">
+                           <b>{{g.tipo|capfirst}}</b>
+                            <div class="dropdown-divider"></div>
+                            {%for cat in categorias%}
+                            {%if cat.idtipocad == g%}
+                            <p><input class="mx-2" type="checkbox" name="{{cat.categoria|capfirst}}">
+                                {{cat.categoria|capfirst}}
+                            </p>
+                            {%endif%}
+                            {%endfor%}
+                        </p>
+>>>>>>> d26d397246fc07fcc07cfe01c1d5066d7d8b27fe
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-inline m-3">
+                <strong>Precio:</strong>
+                <label for="min-precio">Min</label>
+                <input class="mx-2" type="number" name="min-precio" id="min-precio"> €
+                 /
+                <label for="max-precio">Max</label>
+                <input class="mx-2" type="number" name="max-precio" id="max-precio"> €
+            </div>
+
+            <a href="" class="btn filtrar-btn">Filtrar</a>
+        </div>
+    </div>
+</div>
+</div>

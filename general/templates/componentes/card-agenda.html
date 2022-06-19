@@ -1,0 +1,39 @@
+{%load static%}
+<!--Cards de Agenda-->
+<<<<<<< HEAD
+<div class="container mt-4">
+
+    {% for p in productos %}
+    <div class="card agenda-card">
+        <a class="agenda-card-link" href="/contact_detail/{{p.id}}">
+            <div class="row">
+                <div class="col-3">
+                    <img class="user_perfil" src="/static/user_icon.svg" alt="perfil">
+                </div>
+                <div class="col-9 pt-3">
+                    <h3>{{p.name_usuario}}</h3>
+                    <p>{{p.descripcion}}</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    {%endfor%}
+
+</div>
+=======
+
+<div class="card agenda-card">
+    <a class="agenda-card-link" href="10.agendaDetalle.html">
+        <div class="row">
+
+            <div class="col-3">
+                <img class="user_perfil" src="user_icon.svg" alt="perfil">
+            </div>
+            <div class="col-9 pt-3">
+                <h3>Empresa nombre</h3>
+                <p>Descripcion</p>
+            </div>
+        </div>
+    </a>
+</div>
+>>>>>>> d26d397246fc07fcc07cfe01c1d5066d7d8b27fe

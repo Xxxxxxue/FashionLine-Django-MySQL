@@ -1,0 +1,30 @@
+
+<div class="container mt-4">
+    <div class="row">
+        {% for p in productos %}
+        <div class="col-lg-3 col-md-6 mb-4">
+<<<<<<< HEAD
+            <a class="producto-card-link" href="/product_detail/{{p.id}}">
+=======
+            <a class="producto-card-link" href="producto_detalle">
+>>>>>>> d26d397246fc07fcc07cfe01c1d5066d7d8b27fe
+                <div class="card" style="width: 18rem;">
+
+                    <img class="card-img-top" src="/static/imagenes/productos/card1.jpg" alt="Card image cap">
+                    <div class="card-body text-center">
+                        <p>{{p.nombre}}</p>
+                        <h5>{{p.precio}} €</h5>
+                    </div>
+<<<<<<< HEAD
+                    {%if user%}
+                    <button class="boton-producto" data-toggle="modal" data-target="#modal-diseno">Edit</button>
+                    <button class="btn btn-dark">Delete</button>
+                  {%endif%}
+=======
+>>>>>>> d26d397246fc07fcc07cfe01c1d5066d7d8b27fe
+                </div>
+            </a>
+        </div>
+        {%endfor%}
+    </div>
+</div>

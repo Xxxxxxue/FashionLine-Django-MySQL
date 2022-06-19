@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{%load static%}
+
+{%block title%}Angenda De Contacto | Fashion Line{%endblock%}
+
+{% block main %}
+<<<<<<< HEAD
+    {%include "componentes/navigation.html"%}
+=======
+    {%include "componentes/navigation.html" with tipo=tipo categoria=categoria%}
+>>>>>>> d26d397246fc07fcc07cfe01c1d5066d7d8b27fe
+
+    <!--CUERPO-->
+    <div class="container-fluid m-0 p-0">
+
+        <!--Cards de Agenda-->
+<<<<<<< HEAD
+        {%include "componentes/card-agenda.html"%}
+=======
+        <div class="container mt-4">
+        {%include "componentes/card-agenda.html" with imagenes=imagenes productos=productos%}
+        </div>
+>>>>>>> d26d397246fc07fcc07cfe01c1d5066d7d8b27fe
+
+        <!--paginacion-->
+        {%include "componentes/paginacion.html" %}
+
+    </div>
+
+    {%include "componentes/footer.html" %}
+{% endblock %}
+

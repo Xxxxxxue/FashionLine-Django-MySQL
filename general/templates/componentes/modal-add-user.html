@@ -1,0 +1,70 @@
+<!-- Modal user-->
+<div class="modal fade" id="modal-user-editar" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Perfil</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body m-1">
+                <form action="">
+                    Perfil: <br>
+                    <img class="user_perfil_detalle ml-3" src="user_icon.svg" alt="">
+                    <button class="boton-producto w-50 ml-5">edit</button>
+                    <br>
+                    Nombre:
+                    <input class="form-control" type="text" id="Nombre">
+                    Apellidos:
+                    <input class="form-control" type="text" id="Apellidos">
+                    Empresa:
+                    <input class="form-control" type="text" id="Empresa">
+
+                    <div class="dropdown open d-inline-block my-3 mr-1 w-100">
+                        <button class="btn btn-info dropdown-toggle" type="button" id="triggerId" data-toggle="dropdown"
+                                aria-haspopup="true"
+                                aria-expanded="false">
+                            Categoria
+                        </button>
+                        <div class="dropdown-menu check-drop" aria-labelledby="triggerId">
+                            <div class="form-check ml-1">
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDisabled">
+                                <label class="form-check-label" for="flexCheckDisabled">
+                                    Disabled checkbox
+                                </label>
+                            </div>
+                            <div class="form-check ml-1">
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckCheckedDisabled"
+                                       checked>
+                                <label class="form-check-label" for="flexCheckCheckedDisabled">
+                                    Disabled checked checkbox
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    Email:
+                    <input class="form-control" type="email" id="Email">
+                    Teléfono:
+                    <input class="form-control" type="number" id="Telefono">
+                    Localidad:
+                    <select class="form-select" aria-label="Default select example">
+                        <option selected>none (añade uno en la misma pagina más abajo)</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                    </select>
+                    Descripción:
+                    <textarea class="form-control" type="text" id="Descripcion"></textarea>
+                    Imagenes: <br>
+                    <button class="boton-producto w-50 m-1">Subir</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>

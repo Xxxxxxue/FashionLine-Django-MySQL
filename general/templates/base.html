@@ -1,0 +1,17 @@
+{% load static %}
+
+<!--<!doctype html>-->
+<html lang="en">
+<head>
+    {%include "componentes/head-links.html" %}
+    <title>{%block title%}{%endblock%}</title>
+</head>
+
+<body class="cuerpo" {%block capa%}{%endblock%}>
+    <!--{% block navigation %}{% endblock %}-->
+    <!--CUERPO-->
+    {% block main %}{% endblock %}
+
+    <!--{% block footer %}{% endblock %}-->
+</body>
+</html>

@@ -1,0 +1,475 @@
+.cuerpo {
+    background-color: #dfecd6;
+}
+
+/*home*/
+.navbg {
+    background-color: #aacab6;
+    
+}
+.navcolor {
+    color: black;
+}
+.logo {
+    max-height: 100px;
+    margin: 0 auto;
+    padding: 0;
+}
+.navbar-brand {
+    padding-left: 2rem;
+}
+.navmenu {
+    background-color: #eef7f2 !important;
+    width: 1000px;
+    max-height: 800px;
+    overflow: scroll;
+}
+@media (max-width:1000px)  { 
+    .navmenu {
+      width: auto;
+      height: 500px;
+      overflow-y: scroll;
+    }
+}
+.carrito-icon {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    width: auto;
+    height: 40px;
+    padding: 5px;
+}
+.usericon {
+    width: 40px;
+    height: 40px;
+    padding: 5px;
+    margin-right: 1rem;
+    background-repeat: no-repeat; 
+}
+.loginuser {
+    margin-left: 2px;
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+.loginuser:hover {
+    color: white;
+    background-color: #648a93;
+    text-decoration: none;
+}
+.user-drop {
+    position: absolute;
+    width: 250px;
+    height: 600px;
+    border: none;
+    background-color: #aacab6;
+    z-index: 2;
+    top: 70px;
+    right: 0;
+    padding-left: 2%;
+    padding-top: 2%;
+    display: none;
+    transition: all 500ms ease;
+}
+.link-usernav {
+    color: black;
+    text-decoration: none;
+    display: block;
+}
+.link-usernav:hover {
+    color: #43b244;
+    font-weight: bold;
+}
+.slidercapa::before {
+    content: "";
+    background-color: #dfecd6;
+    opacity: .4;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+.sliderimg {
+    margin: 0;
+    max-height: 600px;
+}
+.foto {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 500px;
+    position: relative;
+    max-width: 100%;
+    box-sizing: border-box;
+    border-radius: 5%;
+}
+.trozoContenido {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  vertical-align: middle;
+  padding: 10px auto;
+  margin: 0 auto;
+  overflow-wrap: break-word;
+} 
+.footer {
+    background-color: #aacab6;
+    overflow: hidden;
+    margin-top: 0;
+}
+.footer__container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: space-between;
+}
+
+/*Login y Registro*/
+.loginform {
+    width: 60%;
+    margin: auto;
+}
+
+/*Productos y disenos*/
+.filtrodiv {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    margin: 0 auto;
+    height: 40px;
+    width: 100%;
+    background-color: #648a93;
+}
+.collapse-filtro {background-color: #eef7f2 !important;}
+.dropdown-color { background-color: #648a93 !important;}
+.filtro-menu {
+    width: 300px;
+    max-height: 500px;
+    overflow: scroll;
+}
+.filtrar-btn {
+    background-color: #f8b37f !important;
+    font-weight: 700;
+}
+.filtroimg {
+    height: 40px;
+    text-align: center;
+}
+.producto-card-link {
+    color: black;
+    text-decoration: none;
+}
+.producto-card-link:hover {
+    color: black;
+    text-decoration: none;
+}
+.card-like {
+    position: absolute;
+    padding: auto;
+    left: 90%;
+    margin:10px 5px 5px 0;
+    font-size: 20px;
+    color: #000;
+}
+
+/*Agenda y Chat*/
+.agenda-card {
+    width: 100%;
+    height: 150px;
+    margin: 0 auto;
+}
+.user_perfil {
+    max-height: 100px;
+    margin: auto;
+    padding: 2%; 
+    /* vertical-align: middle; */
+    position: absolute;
+    top: -50%;
+    bottom: -50%;
+    left: 20%;
+    border: 5px solid #f8df72;
+    border-radius: 50%;
+    background-color: #43b244;
+}
+.agenda-card-link {
+    text-decoration: none;
+    color:black;
+    width: 100%;
+    height: 100%;
+    background-color: #f0f5e5;
+}
+.agenda-card-link:hover{
+    text-decoration: none;
+    color:black;
+}
+.agenda-card-link::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+.agenda-card-link:hover::before {
+    background-color: #43b244;
+    opacity: .4;
+    width: 100%;
+    height: 100%;
+}
+.chat-tiempo-ultimo {
+    position: absolute;
+    float: right;
+    right: 20px;
+}
+
+/*Producto y Diseño Detalles*/
+.boton-color {
+    border-radius: 50%;
+    height: 30px;
+    background-color: white;
+    margin-right: 15px;
+    width: 30px;
+}
+.boton-talla {
+    height: 40px;
+    background-color: #f8df72;
+    margin-right: 15px;
+    width: 40px;
+    border: none;
+}
+.cantidad {
+    width: 40px;
+    height: 35px;
+    margin: 0 auto;
+    text-align: center!important;
+    border: none;
+    outline: 0;
+    color: #000;
+    border-top: 1px solid #e6e6e6;
+    border-bottom: 1px solid #e6e6e6;
+}
+.boton-producto {
+    border-radius: 6px;
+    width: 100%;
+    height: 40px;
+    border: none;
+    font-size: 20px;
+    text-align: center;
+    background-color: #f8df72;
+    overflow-wrap: break-word;
+}
+.boton-producto:hover {
+    background-color: #43b244;
+}
+@media (max-width:800px)  { 
+    .boton-producto {
+        font-size: 10px;
+    }
+}
+.hr-vertical {
+    border:         none;
+    border-right:    1px solid #ccccd6;
+}
+.detalle-link {
+    text-decoration: none;
+    color: black;
+    display: block;
+    font-size: 18px;
+    font-weight: 500;
+    margin-top: 5px;
+}
+.detalle-link:hover {
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+}
+.estrella { 
+    color:grey;
+    font-size: 30px;
+}
+.estrella:hover {
+    color:orange;
+    cursor: pointer;
+}
+.input-estrella[type = "radio"]{ 
+    display:none;
+}
+.input-estrella[type="radio"]:checked ~ label {
+    color: orange;
+}
+.clasificacion{
+    margin-left: 5%;
+    float: left;
+    direction: rtl;/* right to left */
+    unicode-bidi: bidi-override;/* bidi de bidireccional */
+}
+.estrella {
+    margin-top: 2px;
+    font-size: 40px;
+    width: auto;
+    margin-left: 1rem;
+}
+.valoracion-media {
+    margin-left: 2%;
+    font-size: 50px;
+    font-weight: bold;
+    font-style: italic;
+}
+.common-reviews__averate-item .fit-item {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    color: #222;
+}
+.common-reviews__averate-item .fit-name {
+    width: 100px;
+    text-align: center;
+}
+.common-reviews__progress {
+    width: 390px;
+    height: 8px;
+    background-color: #ccccd6;
+    border-radius: 4px;
+    margin: 10px;
+}
+.common-reviews__progress .progress-bar {
+    background-color: #222;
+    border-radius: 4px;
+    width: 94%;
+    height: 100%;
+    transition: width .5s ease-in-out;
+}
+.dis-like {
+    margin: auto;
+    font-size: 40px;
+    color: #000;
+}
+
+/*Detalles Agenda*/
+.agenda-div {
+    width: 100%;
+    margin: 0 auto;
+    background-color: #f0f5e5;
+}
+.user_perfil_detalle {
+    max-height: 100px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;    
+    border: 5px solid #f8df72;
+    border-radius: 50%;
+    background-color: #43b244;
+}
+
+/*CHAT*/
+.mensaje-div {
+    width: 100%;
+    margin: 0 auto;
+    background-color: #f0f5e5;
+}
+.iframe-producto {
+    width: 80% !important;
+    height: 150px;
+}
+.chat-tiempo {
+    position: absolute;
+    left: 85%;
+    margin: 2rem;
+    padding-top: 5px;
+}
+.manda-mensaje {
+    height: 100px;
+    overflow-wrap: normal;
+    overflow-y: scroll;
+    background-color: white;
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: 1px solid #e6e6e6;
+}
+.archivo-mensaje {
+    display: inline-block;
+    font-weight: bold;
+    color: #000;
+}
+.archivo-mensaje:hover {
+    color: #648a93;
+}
+
+/*CESTA*/
+.tabla-compra {
+    background-color: white;
+}
+.table-body {
+    text-align: center;
+    height: 100px;
+    font-weight: bold;
+    vertical-align: middle;
+    margin: auto;
+}
+.img-cesta {
+    height: 100px;
+    width: 75px;
+    display: inline-block;
+}
+.modal-tabla {
+    cursor: pointer;
+}
+
+/*user perfil*/
+.bi {
+    cursor: pointer !important;
+}
+.modal-content {
+    background-color: #eef7f2 !important;
+}
+.check-drop {
+    width: 400px;
+    max-height: 300px;
+    overflow-y: scroll;
+}
+
+/*Pedidos*/
+.table-pedido {
+    background-color: white;
+}
+.link-pedido {
+    color: black;
+    text-decoration: none;
+}
+.link-pedido:hover {
+    color: #43b244;
+    text-decoration: none;
+}
+.bi-patch-exclamation {
+    font-size: 25px !important;
+}
+
+/*paginacion*/
+ul.pagination {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+}
+
+ul.pagination li {display: inline;}
+
+ul.pagination li a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+ul.pagination li a:hover{
+    background-color: #f8b37f;
+}
+.pag-active {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/*error mensaje*/
+.error {
+    color:red;
+    display:block;
+    margin-top: 5px;
+}

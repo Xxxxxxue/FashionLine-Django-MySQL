@@ -1,0 +1,245 @@
+<<<<<<< HEAD
+{% extends 'base.html' %}
+{%load static%}
+
+{%block title%}Change Password | Fashion Line{%endblock%}
+
+{% block main %}
+    {%include "componentes/navigation.html"%}
+
+    <!--CHANGE KEY-->
+    <div class="container mt-5">
+        <h1 class="text-center mb-5">CAMBIAR CONTRASEÑA</h1>
+        <form class="loginform">
+            <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="exampleInputPassword1">
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputPassword2" class="form-label">Repite Contraseña</label>
+                <input type="password" class="form-control" id="exampleInputPassword2">
+            </div>
+            <button type="submit" class="btn btn-success">Guardar</button>
+        </form>
+    </div>
+
+    {%include "componentes/footer.html" %}
+{% endblock %}
+
+
+
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- CSS only -->
+  <link rel="stylesheet" href="estilos.css">
+  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+  <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <!-- JavaScript Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+  <!-- CSS only -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
+  <title>Cambiar Contraseña</title>
+</head>
+
+<body class="cuerpo">
+  <!--barra de navegacion-->
+  <div class="container-fluid mx-0 p-0">
+    <div class="row text-center  navbg">
+      <a href="1.home.html" ><img class="logo" src="fashioline.png" alt="logo"></a>
+    </div>
+    <div class="navbg">
+      <nav class="navbar navbar-expand-lg mx-0 pb-4 navcolor">
+        <a class="navbar-brand" href="#">Home</a>
+        <button class="navbar-toggler mx-3" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Productos en venta
+              </a>
+              <div class="dropdown-menu navmenu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item mx-3 font-weight-bold" href="#" style="font-size: 20px;">Novedades</a>
+                <div class="container-fluid row">
+                  <div class="col m-3">
+                    <p>ROPA</p>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Vestidos</a>
+                    <a class="dropdown-item" href="#">T-shirts</a>
+                    <a class="dropdown-item" href="#">Pantalones</a>
+                    <a class="dropdown-item" href="#">Chaquetas</a>
+                    <a class="dropdown-item" href="#">Monos</a>
+                    <a class="dropdown-item" href="#">Moda de baño</a>
+                    <a class="dropdown-item" href="#">Camisas</a>
+                    <a class="dropdown-item" href="#">Tops</a>
+                  </div>
+                  <div class="col m-3">
+                    <p>ZAPATO</p>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Botas</a>
+                    <a class="dropdown-item" href="#">Sneakers</a>
+                    <a class="dropdown-item" href="#">Tacones</a>
+                    <a class="dropdown-item" href="#">Converses</a>
+                  </div>
+                  <div class="col m-3">
+                    <p>ZAPATO</p>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Botas</a>
+                    <a class="dropdown-item" href="#">Sneakers</a>
+                    <a class="dropdown-item" href="#">Tacones</a>
+                    <a class="dropdown-item" href="#">Converses</a>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="nav-item dropdown mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Diseños
+              </a>
+              <div class="dropdown-menu navmenu" aria-labelledby="navbarDropdown">
+                <div class="container-fluid row">
+                  <div class="col m-3">
+                    <p>ROPA</p>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Vestidos</a>
+                    <a class="dropdown-item" href="#">T-shirts</a>
+                    <a class="dropdown-item" href="#">Pantalones</a>
+                    <a class="dropdown-item" href="#">Chaquetas</a>
+                    <a class="dropdown-item" href="#">Monos</a>
+                    <a class="dropdown-item" href="#">Moda de baño</a>
+                    <a class="dropdown-item" href="#">Camisas</a>
+                    <a class="dropdown-item" href="#">Tops</a>
+                  </div>
+                  <div class="col m-3">
+                    <p>ZAPATO</p>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Botas</a>
+                    <a class="dropdown-item" href="#">Sneakers</a>
+                    <a class="dropdown-item" href="#">Tacones</a>
+                    <a class="dropdown-item" href="#">Converses</a>
+                  </div>
+                  <div class="col m-3">
+                    <p>ZAPATO</p>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Botas</a>
+                    <a class="dropdown-item" href="#">Sneakers</a>
+                    <a class="dropdown-item" href="#">Tacones</a>
+                    <a class="dropdown-item" href="#">Converses</a>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="nav-item dropdown mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Agenda de Contactos
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#">Talleres</a>
+                <a class="dropdown-item" href="#">Empresas de venta mayor</a>
+                <a class="dropdown-item" href="#">Diseñadores</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Something else here</a>
+              </div>
+            </li>
+            <li class="nav-item mx-1">
+              <a class="nav-link disabled" href="#">Mensajeria</a>
+            </li>
+          </ul>
+          <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Search</button>
+          </form>
+            <a href="2.acceso.html"><img class="d-lg-block d-none usericon" src="user_icon.svg"></a>
+            <a class="d-lg-none loginuser" href="2.acceso.html">Iniciar Sesión</a>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <!--LOGIN-->
+  <div class="container mt-5">
+    <h1 class="text-center mb-5">CAMBIAR CONTRASEÑA</h1>
+    <form class="loginform">
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Contraseña</label>
+            <input type="password" class="form-control" id="exampleInputPassword1">
+          </div>
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label">Repite Contraseña</label>
+          <input type="password" class="form-control" id="exampleInputPassword2">
+        </div>
+        <button type="submit" class="btn btn-success">Guardar</button>
+      </form>
+  </div>
+  <!--Footer-->
+  <footer class="footer mt-5">
+    <br>
+    <br>
+    <div class="container">
+        <div class="footer__main">
+            <div class="footer__container">
+                <!-- PRIMERA COLUMNA -->
+                <div class="footer__column">
+                    <h3 class="footer__title-column my-3">INFORMACIONES</h3>
+                    <ul class="footer__column-items">
+                        <li class="footer__column-item">
+                          Devoluciones y Cambios
+                        </li>
+                        <li class="footer__column-item">
+                          Formas de Pago y Recibos
+                        </li>
+                        <li class="footer__column-item">
+                          Politica del web
+                        </li>
+                    </ul>
+                </div>
+                <!-- SEGUNDA COLUMNA -->
+                <div class="footer__column">
+                    <h3 class="footer__title-column my-3">SOBRE NOSOTROS</h3>
+                    <ul class="footer__column-items">
+                        <li class="footer__column-item">
+                          ¿Quién somos?
+                        </li>
+                        <li class="footer__column-item">
+                          ¿Necesitas ayuda?
+                        </li>
+                    </ul>
+                </div>
+                <!-- TERCERA COLUMNA -->
+                <div class="footer__column">
+                    <h3 class="footer__title-column my-3">CONTACTOS</h3>
+                    <ul class="footer__column-items">
+                        <li class="footer__column-item">
+                          Email: nievealas@gmail.com
+                        </li>
+                        <li class="footer__column-item">
+                          Teléfono: +34666666666
+                        </li>
+                        <li class="footer__column-item">
+                          Instagram:
+                        </li>
+                        <li class="footer__column-item">
+                          Facebook:
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="text-center mb-3">
+              © 2022 FASHION LINE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AUTOR: BIANXUE WU
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
+>>>>>>> d26d397246fc07fcc07cfe01c1d5066d7d8b27fe

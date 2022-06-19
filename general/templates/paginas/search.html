@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{%load static%}
+
+{%block title%}Search | Fashion Line{%endblock%}
+
+{% block main %}
+    {%include "componentes/navigation.html"%}
+
+    <!--CUERPO-->
+    <!--CUERPO DE SEARCH-->
+    <div class="container-fluid m-0 p-0">
+        <!--Parte filtro Collapse-->
+        {%include "componentes/filtro.html"%}
+        <!--Cards de productos, disenos, agendas-->
+        <h3 class="mt-2 ml-5">Productos</h3>
+        {%include "componentes/card-producto.html"%}
+        <hr>
+        <h3 class="mt-2 ml-5">Diseños</h3>
+        {%include "componentes/card-diseno.html"%}
+        <hr>
+        <h3 class="my-2 ml-5">Agenda de Contacto</h3>
+        {%include "componentes/card-agenda.html"%}
+
+        <!--paginacion-->
+        {%include "componentes/paginacion.html" %}
+
+    </div>
+
+    {%include "componentes/footer.html" %}
+{% endblock %}

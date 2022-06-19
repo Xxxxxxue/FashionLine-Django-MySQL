@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{%load static%}
+
+{%block title%}Registrar | Fashion Line{%endblock%}
+
+{% block main %}
+<<<<<<< HEAD
+    {%include "componentes/navigation.html"%}
+=======
+    {%include "componentes/navigation.html" with tipo=tipo categoria=categoria%}
+>>>>>>> d26d397246fc07fcc07cfe01c1d5066d7d8b27fe
+
+    <!--CUERPO-->
+    <!--Registar-->
+    <div class="container mt-5">
+        <h1 class="text-center mb-5">Nuevo Cliente</h1>
+        <form class="loginform" action="{%url 'login' %}" method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Usuario</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" name="usuario" placeholder="email">
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="exampleInputPassword1" name="password">
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputPassword2" class="form-label">Repetir Contraseña</label>
+                <input type="password" class="form-control" id="exampleInputPassword2" name="passwprd1">
+            </div>
+            <!--datos-->
+            <div class="mb-3">
+                <label for="exampleInputText" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="exampleInputText" name="nombre">
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputText1" class="form-label">Apellidos</label>
+                <input type="text" class="form-control" id="exampleInputText1">
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1" name="check">
+                <label class="form-check-label" for="exampleCheck1">He leído y entendido la Privacy Notice</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Crear Cuenta</button>
+        </form>
+    </div>
+
+    {%include "componentes/footer.html" %}
+{% endblock %}
+

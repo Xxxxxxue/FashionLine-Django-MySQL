@@ -1,0 +1,219 @@
+{% load static %}
+<!--barra de navegacion-->
+<!--TIPO Y CATEGORIA-->
+<div class="container-fluid mx-0 p-0">
+    <div class="row text-center  navbg">
+        <a href="{%url 'home' %}"><img class="logo" src="{% static 'imagenes/fashionline.png'%}" alt="logo"></a>
+    </div>
+    <div class="navbg">
+        <nav class="navbar navbar-expand-lg mx-0 pb-4 navcolor">
+            <a class="navbar-brand" href="{%url 'home' %}">Home</a>
+            <button class="navbar-toggler mx-3" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item dropdown mx-1">
+<<<<<<< HEAD
+                        <a class="nav-link dropdown-toggle" href="/product/1" id="navbarDropdown" role="button"
+=======
+                        <a class="nav-link dropdown-toggle" href="producto/1/" id="navbarDropdown" role="button"
+>>>>>>> d26d397246fc07fcc07cfe01c1d5066d7d8b27fe
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Productos en venta
+                        </a>
+                        <div class="dropdown-menu navmenu min-width:100px" aria-labelledby="navbarDropdown">
+<<<<<<< HEAD
+                            <a class="dropdown-item mx-3 font-weight-bold" href="/product/1"
+=======
+                            <a class="dropdown-item mx-3 font-weight-bold" href="producto/1/"
+>>>>>>> d26d397246fc07fcc07cfe01c1d5066d7d8b27fe
+                               style="font-size: 20px;">Novedades</a>
+                            <div class="container-fluid row ">
+
+                                 {%for t in tipo%}
+                                    {%if t.tipo != "usuarios"%}
+                                    <div class="col m-3">
+<<<<<<< HEAD
+                                        <a class="dropdown-item pl-2" href="/product/{{t.tipo}}/1">{{t.tipo|capfirst}}</a>
+                                        <div class="dropdown-divider"></div>
+                                        {%for c in categorias%}
+                                        {%if c.idtipocad == t%}
+                                        <a class="dropdown-item" href="/product/{{t.tipo}}/{{c.categoria}}/1">{{c.categoria|capfirst}}</a>
+=======
+                                        <a class="dropdown-item pl-2" href="producto/{{t.tipo}}/1/">{{t.tipo|capfirst}}</a>
+                                        <div class="dropdown-divider"></div>
+                                        {%for c in categoria%}
+                                        {%if c.idtipocad == t%}
+                                        <a class="dropdown-item" href="producto/{{t.tipo}}/{{c.categoria}}/1/">{{c.categoria|capfirst}}</a>
+>>>>>>> d26d397246fc07fcc07cfe01c1d5066d7d8b27fe
+                                        {%endif%}
+                                        {%endfor%}
+                                    </div>
+                                    {%endif%}
+                                {%endfor%}
+
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown mx-1">
+<<<<<<< HEAD
+                        <a class="nav-link dropdown-toggle" href="/disign/1" id="navbarDropdown1" role="button"
+=======
+                        <a class="nav-link dropdown-toggle" href="diseno/1/" id="navbarDropdown1" role="button"
+>>>>>>> d26d397246fc07fcc07cfe01c1d5066d7d8b27fe
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Diseños
+                        </a>
+                        <div class="dropdown-menu navmenu" aria-labelledby="navbarDropdown1">
+<<<<<<< HEAD
+                            <a class="dropdown-item mx-3 font-weight-bold" href="/disign/1"
+=======
+                            <a class="dropdown-item mx-3 font-weight-bold" href="diseno/1/"
+>>>>>>> d26d397246fc07fcc07cfe01c1d5066d7d8b27fe
+                               style="font-size: 20px;">Novedades</a>
+                            <div class="container-fluid row">
+
+                                {%for t in tipo%}
+                                    {%if t.tipo != "usuarios"%}
+                                    <div class="col m-3">
+<<<<<<< HEAD
+                                        <a class="dropdown-item pl-2" href="/disign/{{t.tipo}}/1">{{t.tipo|capfirst}}</a>
+                                        <div class="dropdown-divider"></div>
+                                        {%for c in categorias%}
+                                        {%if c.idtipocad == t%}
+                                        <a class="dropdown-item" href="/disign/{{t.tipo}}/{{c.categoria}}/1">{{c.categoria|capfirst}}</a>
+=======
+                                        <a class="dropdown-item pl-2" href="diseno/{{t.tipo}}/1/">{{t.tipo|capfirst}}</a>
+                                        <div class="dropdown-divider"></div>
+                                        {%for c in categoria%}
+                                        {%if c.idtipocad == t%}
+                                        <a class="dropdown-item" href="diseno/{{t.tipo}}/{{c.categoria}}/1/">{{c.categoria|capfirst}}</a>
+>>>>>>> d26d397246fc07fcc07cfe01c1d5066d7d8b27fe
+                                        {%endif%}
+                                        {%endfor%}
+                                    </div>
+                                    {%endif%}
+                                {%endfor%}
+
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown mx-1">
+<<<<<<< HEAD
+                        <a class="nav-link dropdown-toggle" href="/contact/1" id="navbarDropdown2" role="button"
+=======
+                        <a class="nav-link dropdown-toggle" href="agenda/1/" id="navbarDropdown2" role="button"
+>>>>>>> d26d397246fc07fcc07cfe01c1d5066d7d8b27fe
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Agenda de Contactos
+                        </a>
+                        <div class="dropdown-menu min-width:100px" aria-labelledby="navbarDropdown2">
+
+                            {%for t in tipo%}
+                                {%if t.tipo == 'usuarios'%}
+<<<<<<< HEAD
+                                    {%for c in categorias%}
+                                    {%if c.idtipocad == t%}
+                                        {%if c.categoria == 'designers'%}
+                                            <a class="dropdown-item" href="/contact/{{c.categoria}}/1">Diseñadores</a>
+                                        {%elif c.categoria == 'Empresas de venta mayor'%}
+                                            <a class="dropdown-item" href="/contact/empresas/1">{{c.categoria|capfirst}}</a>
+                                        {%else%}
+                                        <a class="dropdown-item" href="/contact/{{c.categoria}}/1">{{c.categoria|capfirst}}</a>
+                                        {%endif%}
+=======
+                                    {%for c in categoria%}
+                                    {%if c.idtipocad == t%}
+                                        <a class="dropdown-item" href="agenda/{{c.categoria}}/1/">{{c.categoria|capfirst}}</a>
+>>>>>>> d26d397246fc07fcc07cfe01c1d5066d7d8b27fe
+                                    {%endif%}
+                                    {%endfor%}
+                                {%endif%}
+                            {%endfor%}
+
+                            <div class="dropdown-divider"></div>
+<<<<<<< HEAD
+                            <a class="dropdown-item" href="/contact/1">Ver todo</a>
+                        </div>
+                    </li>
+                    <li class="nav-item mx-1">
+                        <a class="nav-link disabled" href="/message/1">Mensajeria</a>
+=======
+                            <a class="dropdown-item" href="agenda/1/">Ver todo</a>
+                        </div>
+                    </li>
+                    <li class="nav-item mx-1">
+                        <a class="nav-link disabled" href="mensajeria/1/">Mensajeria</a>
+>>>>>>> d26d397246fc07fcc07cfe01c1d5066d7d8b27fe
+                    </li>
+                    <li class="nav-item dropdown mx-1 d-lg-none d-block">
+                        <a class="d-lg-none nav-link dropdown-toggle" href="#" id="navbarDropdown3" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            nombre
+                        </a>
+                        <div class="dropdown-menu min-width:100px" aria-labelledby="navbarDropdown3">
+<<<<<<< HEAD
+                            <a class="dropdown-item" href="/user/profile/1">Perfil</a>
+                            <a class="dropdown-item" href="/user/changeKey">Cambiar Contraseña</a>
+                            <a class="dropdown-item" href="/user/orders">Mis pedidos</a>
+                            <a class="dropdown-item" href="/user/myproduct/1">Mis productos</a>
+                            <a class="dropdown-item" href="/user/mydisign/1">Mis diseños</a>
+                            <a class="dropdown-item" href="/user/favorites/1">Mis favoritos</a>
+                            <a class="dropdown-item" href="/logout">Salir</a>
+                        </div>
+                    </li>
+                </ul>
+                <!--search-->
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                    <a href="/search/1" class="btn btn-outline-dark my-2 my-sm-0" type="submit">Search</a>
+                </form>
+                <!--login-->
+                <a href="/cart"><img class="d-lg-block d-none carrito-icon"
+                                src="{% static 'imagenes/shopping_icon.svg'%}"></a>
+                <a href="/login" onmouseover="BlockUserNav()" onmouseout="NoneUserNav()"><img
+                        class="d-lg-block d-none usericon" src="{% static '/imagenes/user_icon.svg'%}"></a>
+                <div class="user-drop" id="navUser">
+                    <a class="link-usernav mt-2" href="/user/profile/1">Perfil</a>
+                    <a class="link-usernav mt-2" href="/user/changeKey">Cambiar Contraseña</a>
+                    <a class="link-usernav mt-2" href="/user/orders">Mis pedidos</a>
+                    <a class="link-usernav mt-2" href="/user/myproduct/1">Mis productos</a>
+                    <a class="link-usernav mt-2" href="/user/mydisign/1">Mis diseños</a>
+                    <a class="link-usernav mt-2" href="/user/favorites/1">Mis favoritos</a>
+                    <a class="link-usernav mt-2" href="/logout">Salir</a>
+=======
+                            <a class="dropdown-item" href="user/perfil/1/">Perfil</a>
+                            <a class="dropdown-item" href="user/changeKey">Cambiar Contraseña</a>
+                            <a class="dropdown-item" href="user/pedidos">Mis pedidos</a>
+                            <a class="dropdown-item" href="user/misproductos/1/">Mis productos</a>
+                            <a class="dropdown-item" href="user/misdisenos/1/">Mis diseños</a>
+                            <a class="dropdown-item" href="user/favoritos/1/">Mis favoritos</a>
+                            <a class="dropdown-item" href="#">Salir</a>
+                        </div>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Search</button>
+                </form>
+                <a href="/cesta"><img class="d-lg-block d-none carrito-icon"
+                                src="{% static 'imagenes/shopping_icon.svg'%}"></a>
+                <a href="/login" onmouseover="BlockUserNav()" onmouseout="NoneUserNav()"><img
+                        class="d-lg-block d-none usericon" src="{% static 'imagenes/user_icon.svg'%}"></a>
+                <div class="user-drop" id="navUser">
+                    <a class="link-usernav mt-2" href="user/perfil/1/">Perfil</a>
+                    <a class="link-usernav mt-2" hhref="user/changeKey">Cambiar Contraseña</a>
+                    <a class="link-usernav mt-2" href="user/pedidos">Mis pedidos</a>
+                    <a class="link-usernav mt-2" href="user/misproductos/1/">Mis productos</a>
+                    <a class="link-usernav mt-2" href="user/misdisenos/1/">Mis diseños</a>
+                    <a class="link-usernav mt-2" href="user/favoritos/1/">Mis favoritos</a>
+                    <a class="link-usernav mt-2" href="#">Salir</a>
+>>>>>>> d26d397246fc07fcc07cfe01c1d5066d7d8b27fe
+                </div>
+                <a class="d-lg-none loginuser" href="/login">Iniciar Sesión</a>
+            </div>
+        </nav>
+    </div>
