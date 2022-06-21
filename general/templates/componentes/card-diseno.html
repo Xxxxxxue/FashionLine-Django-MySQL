@@ -7,13 +7,17 @@
               <div class="card" style="width: 18rem;">
                 <a href=""><i class="bi bi-suit-heart card-like" aria-hidden="true"></i></a>
                 <a class="producto-card-link" href="/disign_detail/{{p.id}}">
-                  <img class="card-img-top" src="/static/imagenes/productos/img_02.webp" alt="Card image cap">
+                    {%for i in imagenes%}
+                    {%if i.iddiseno == p%}
+                  <img class="card-img-top" src="{{i.idimagen.imagen}}" alt="Card image cap">
+                    {%endif%}
+                    {%endfor%}
                 </a>
                   <div class="card-body text-center">
                       <p>{{p.nombre}}</p>
-                      <h5>Autor: Rosa</h5>
+                      <h5>{{p.idusuario.idclientes.nombre}}</h5>
                   </div>
-                  {%if user%}
+                  {%if user.is_authenticated%}
                    <button class="boton-producto" data-toggle="modal" data-target="#modal-diseno">Edit</button>
                    <button class="btn btn-dark">Delete</button>
                   {%endif%}

@@ -6,16 +6,18 @@
     <div class="card agenda-card">
         <a class="agenda-card-link" href="/contact_detail/{{p.id}}">
             <div class="row">
-                <div class="col-3">
+                <div class="col-3 divimg">
                     {% for i in imagenes %}
-                    {%if i.idcliente == p%}
+                    <!--{{i.id}}
+                    {{p}}-->
+                    {% if i.idcliente == p %}
                     <img class="user_perfil" src="{{i.idimagen.imagen}}" alt="perfil">
                     {%endif%}
                     {%endfor%}
                 </div>
                 <div class="col-9 pt-3">
-                    <h3>{{p.name_usuario}}</h3>
-                    <p>{{p.descripcion}}</p>
+                    <h3>{{p.nombre|capfirst}}</h3>
+                    <p class="pr-5 agenda-p">{{p.descripcion|capfirst}}</p>
                 </div>
             </div>
         </a>

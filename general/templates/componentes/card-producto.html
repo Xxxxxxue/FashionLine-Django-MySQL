@@ -15,10 +15,10 @@
                         <h5>{{p.precio}} €</h5>
                     </div>
 
-                    {%if user%}
+                    {%if user.is_authenticated%}
                     <button class="boton-producto" data-toggle="modal" data-target="#modal-diseno">Edit</button>
                     <button class="btn btn-dark">Delete</button>
-                  {%endif%}
+                    {%endif%}
 
                 </div>
             </a>

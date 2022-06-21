@@ -2,7 +2,8 @@ from django.db.models import Q
 from django.shortcuts import render, HttpResponse, redirect
 from general import models
 from general import pagination
-
+from django.utils import timezone
+from django.contrib.auth import logout
 
 # variables globales para navigation y filtro
 tipocad = models.Tipocategoria.objects.all()
@@ -10,6 +11,7 @@ categorias = models.Categorias.objects.all()
 color = models.Colores.objects.all()
 talla =  models.Tallas.objects.all()
 valoracion = models.Valoraciones.objects.all()
+sexos = models.Sexos.objects.all()
 
 
 # PAGINAS PRINCIPALES
@@ -23,18 +25,23 @@ def home(request):
     # tipocad = Tipocategoria.objects.get(tipo="ropa")
     # Categorias.objects.create(categoria="camiseta",idtipocad=tipocad)
     ####################################################################################
-    # ESTOS CODIGOS NO INCLUYE EL DE TIPO USUARIO
-    # tipocad = models.Tipocategoria.objects.filter(~Q(tipo="usuarios"))
-    # id_not = models.Tipocategoria.objects.get(tipo="usuarios")
-    # categoria = models.Categorias.objects.filter(~Q(idtipocad=id_not))
-    # print(slider)
-    # print(tipocad,categoria)
 
     text = ' <div class="carousel-caption d-none d-md-block"> \
             <h5>WELCOME TO FASHIONLINE!</h5>\
             <p>Get your fashion, choose you style!</p> \
             </div>'
-    slider = models.Imagenes.objects.filter(nombre='slider')
+    # slider de los imagenes promociones e imagenes subidos directamente en tabla imagen
+    fecha = timezone.now()
+    promo = models.Promociones.objects.filter(ffin__gte=fecha)
+    imagenes = models.Imagenes.objects.filter(nombre='slider')
+
+    slider = []
+    slider += imagenes
+    slider += promo
+
+    print(slider)
+    # print(promo[0].ffin, fecha)
+
     return render(request, "paginas/home.html", {'slider': slider, 'tipo': tipocad, 'categorias':categorias, 'text': text })
 
 
@@ -65,15 +72,26 @@ def registro(request):
     password = request.POST.get('password')
     return redirect(login)
 
+# LOGOUT
+def salir(request):
+    logout(request)
+    redirect(home)
+
 ########################################################################################################################
 
 # PRODUCTO
-def producto(request,page):
+def producto(request,sexo,page):
     # sacar database para el filto : variables grobales
     # color, talla, precio(no), valoracion, tipos y categorias para filtro
 
     #sacando productos
-    productos = models.Productos.objects.all()
+    s = sexos.get(tipo=sexo)
+    psexo = models.Productosexo.objects.filter(idsexo=s)
+    productos = []
+    for t in psexo:
+        productos.append(t.idproducto)
+
+    # sacar una imagen para cada productos
     imagenes = []
     for index, p in enumerate(productos):
         imagenes += models.Productoimagen.objects.filter(idproducto=p)[:1]
@@ -81,100 +99,86 @@ def producto(request,page):
         # print(imagenes.count(imagenes[index]))
         # print(imagenes[index].idimagen.imagen)
 
-    # print(img,img[0].idproducto.id,img[1].idproducto.id)
+    # print(imagenes,imagenes[0].idproducto.id,imagenes[1].idproducto.id)
     # Paginacion : llamar metodo pagination
     datos_pagination = pagination.pagination(productos, page)
-    url = 'product'
+    url = 'product/' + sexo
 
-    return render(request, "paginas/producto.html", {'color': color, 'talla': talla,
+    return render(request, "paginas/producto.html", {'color': color, 'talla': talla, 'sexos': sexos, 'sexo': sexo,
                                                      'valoracion': valoracion, 'tipo': tipocad, 'categorias': categorias,
                                                      'imagenes': imagenes, 'productos': datos_pagination['page_productos'],
                                                      'pagelist': datos_pagination['pageList'], 'num': datos_pagination['num'],
                                                      'paginacion_url': url})
 
-def producto_filtro_tipo(request,tipo, page):
+def producto_filtro_tipo(request,sexo,tipo,page):
     # sacar database para el filto
     # color, talla, precio(no), valoracion, tipos y categorias
 
-    # sacando productos
-    # t = models.Tipocategoria.objects.filter(tipo=tipo)
-    # c = models.Categorias.objects.filter(idtipocad=t)
-    # pc = []
-    # for c1 in c:
-    #     pc.append(models.Productocategoria.objects.filter(idcategoria=c1))
-    # # productos = []
-    # # for i in pt:
-    # #     productos.append(models.Productos.objects.filter(idproducto=i))
-    # print(pc)
-    imagenes = models.Imagenes.objects.filter(~Q(nombre='slider'))
-    productos = models.Productos.objects.all()
+    # sacando productos de tipo x
+    s = sexos.get(tipo=sexo)
+    psexo = models.Productosexo.objects.filter(idsexo=s)
+    # print("Tipo de producto: ",producto[1].getTipo())
+    productos=[]
+    for t in psexo:
+        if(t.idproducto.getTipo()==tipo):
+            productos.append(t.idproducto)
+
+    # sacar una imagen para cada producto
+    imagenes = []
+    for index, p in enumerate(productos):
+        imagenes += models.Productoimagen.objects.filter(idproducto=p)[:1]
 
 
     # Paginacion : llamar metodo pagination
     datos_pagination = pagination.pagination(productos, page)
-    url = 'product/' + tipo
+    url = 'product/' + tipo + '/' + sexo
 
     return render(request, "paginas/producto.html", {'color': color, 'talla': talla,'valoracion': valoracion, 'tipo': tipocad,
-                                                     'categorias': categorias,'imagenes': imagenes,
+                                                     'categorias': categorias,'imagenes': imagenes, 'sexos':sexos, 'sexo': sexo,
                                                      'productos': datos_pagination['page_productos'],
                                                      'pagelist': datos_pagination['pageList'],
                                                      'num': datos_pagination['num'],'paginacion_url': url})
 
-def producto_filtro_categoria(request,tipo, categoria, page):
+def producto_filtro_categoria(request,tipo,sexo,categoria,page):
     # sacar database para el filto
     # color, talla, precio(no), valoracion, tipos y categorias
 
-    # sacando productos
-    productos = models.Productos.objects.all()
-    imagenes = models.Imagenes.objects.filter(~Q(nombre='slider'))
+    # sacando productos de tipo x
+    s = sexos.get(tipo=sexo)
+    psexo = models.Productosexo.objects.filter(idsexo=s)
+    # print("Tipo de producto: ",producto[1].getTipo())
+    productos = []
+    for t in psexo:
+        if (t.idproducto.getCategoria() == categoria):
+            productos.append(t.idproducto)
+
+    # sacar una imagen para cada producto
+    imagenes = []
+    for p in productos:
+        imagenes += models.Productoimagen.objects.filter(idproducto=p)[:1]
 
     # Paginacion : llamar metodo pagination
     datos_pagination = pagination.pagination(productos, page)
-    url = 'product/' + tipo + '/' + categoria
+    url = 'product/' + tipo + '/' + categoria + '/' + sexo
 
-    return render(request, "paginas/producto.html", {'color': color, 'talla': talla,
+    return render(request, "paginas/producto.html", {'color': color, 'talla': talla, 'sexos': sexos, 'sexo': sexo,
                                                      'valoracion': valoracion, 'tipo': tipocad, 'categorias': categorias,
                                                      'imagenes': imagenes, 'productos': datos_pagination['page_productos'],
                                                      'pagelist': datos_pagination['pageList'], 'num': datos_pagination['num'],
                                                      'paginacion_url': url})
 
 def producto_detalle(request, id):
-    return render(request, "paginas/producto_detalle.html")
+    # saca producto -> id
+    producto = models.Productos.objects.filter(id=id)
+    # saca todos imagenes
+    imagenes = models.Productoimagen.objects.filter(idproducto=producto)
 
-
-########################################################################################################################
-# DISENO
-def diseno(request, page):
-    # database filtro
-
-    # sacando disenos
-    productos = models.Disenos.objects.all()
-    imagenes = models.Imagenes.objects.filter(~Q(nombre='slider'))
 
     # Paginacion : llamar metodo pagination
     datos_pagination = pagination.pagination(productos, page)
-    url = 'disign'
+    url = 'product/' + tipo + '/' + categoria
 
-    return render(request, "paginas/diseno.html", {'color': color, 'talla': talla,
-                                                     'valoracion': valoracion, 'tipo': tipocad,
-                                                     'categorias': categorias,'imagenes': imagenes,
-                                                     'productos': datos_pagination['page_productos'],
-                                                     'pagelist': datos_pagination['pageList'],
-                                                     'num': datos_pagination['num'], 'paginacion_url': url})
-
-def diseno_filtro_tipo(request, page, tipo):
-    # database
-    # color, talla, precio(no), valoracion, tipos y categorias
-
-    # sacando disenos
-    productos = models.Disenos.objects.all()
-    imagenes = models.Imagenes.objects.filter(~Q(nombre='slider'))
-
-    # Paginacion : llamar metodo pagination
-    datos_pagination = pagination.pagination(productos, page)
-    url = 'disign/' + tipo
-
-    return render(request, "paginas/diseno.html", {'color': color, 'talla': talla,
+    return render(request, "paginas/producto_detalle.html", {'color': color, 'talla': talla,
                                                      'valoracion': valoracion, 'tipo': tipocad,
                                                      'categorias': categorias,
                                                      'imagenes': imagenes,
@@ -183,19 +187,88 @@ def diseno_filtro_tipo(request, page, tipo):
                                                      'num': datos_pagination['num'],
                                                      'paginacion_url': url})
 
-def diseno_filtro_categoria(request, page, tipo, categoria):
-    # database
-    # color, talla, precio(no), valoracion, tipos y categorias
 
-    # sacando disenos
-    productos = models.Disenos.objects.all()
-    imagenes = models.Imagenes.objects.filter(~Q(nombre='slider'))
+########################################################################################################################
+# DISENO
+def diseno(request, sexo, page):
+    # database filtro
+
+    # sacando productos de sexo
+    s = sexos.get(tipo=sexo)
+    psexo = models.Disenosexo.objects.filter(idsexo=s)
+    productos = []
+    for t in psexo:
+        productos.append(t.iddiseno)
+
+    #imagenes
+    imagenes = []
+    for p in productos:
+        imagenes += models.Disenoimagen.objects.filter(iddiseno=p)[:1]
+
+    # user name
 
     # Paginacion : llamar metodo pagination
     datos_pagination = pagination.pagination(productos, page)
-    url = 'disign/' + tipo + '/' + categoria
+    url = 'disign/' + '/' + sexo
 
-    return render(request, "paginas/diseno.html", {'color': color, 'talla': talla,
+    return render(request, "paginas/diseno.html", {'color': color, 'talla': talla, 'sexos': sexos, 'sexo': sexo,
+                                                     'valoracion': valoracion, 'tipo': tipocad,
+                                                     'categorias': categorias,'imagenes': imagenes,
+                                                     'productos': datos_pagination['page_productos'],
+                                                     'pagelist': datos_pagination['pageList'],
+                                                     'num': datos_pagination['num'], 'paginacion_url': url})
+
+def diseno_filtro_tipo(request, sexo, page, tipo):
+    # database filtro
+
+    # sacando productos de sexo
+    s = sexos.get(tipo=sexo)
+    psexo = models.Disenosexo.objects.filter(idsexo=s)
+    productos = []
+    for t in psexo:
+        if(t.iddiseno.getTipo() == tipo):
+            productos.append(t.iddiseno)
+
+    # imagenes
+    imagenes = []
+    for p in productos:
+        imagenes += models.Disenoimagen.objects.filter(iddiseno=p)[:1]
+
+    # Paginacion : llamar metodo pagination
+    datos_pagination = pagination.pagination(productos, page)
+    url = 'disign/' + tipo + '/' + sexo
+
+    return render(request, "paginas/diseno.html", {'color': color, 'talla': talla, 'sexos': sexos, 'sexo': sexo,
+                                                     'valoracion': valoracion, 'tipo': tipocad,
+                                                     'categorias': categorias,
+                                                     'imagenes': imagenes,
+                                                     'productos': datos_pagination['page_productos'],
+                                                     'pagelist': datos_pagination['pageList'],
+                                                     'num': datos_pagination['num'],
+                                                     'paginacion_url': url})
+
+def diseno_filtro_categoria(request, sexo, page, tipo, categoria):
+    # database
+    # color, talla, precio(no), valoracion, tipos y categorias
+
+    # sacando productos de sexo
+    s = sexos.get(tipo=sexo)
+    psexo = models.Disenosexo.objects.filter(idsexo=s)
+    productos = []
+    for t in psexo:
+        if (t.iddiseno.getCategoria() == categoria):
+            productos.append(t.iddiseno)
+
+    # imagenes
+    imagenes = []
+    for p in productos:
+        imagenes += models.Disenoimagen.objects.filter(iddiseno=p)[:1]
+
+    # Paginacion : llamar metodo pagination
+    datos_pagination = pagination.pagination(productos, page)
+    url = 'disign/' + tipo + '/' + categoria + '/' + sexo
+
+    return render(request, "paginas/diseno.html", {'color': color, 'talla': talla, 'sexos': sexos, 'sexo': sexo,
                                                      'valoracion': valoracion, 'tipo': tipocad,
                                                      'categorias': categorias,
                                                      'imagenes': imagenes,
@@ -210,13 +283,15 @@ def diseno_detalle(request, id):
 # AGENDA
 def agenda(request, page):
     # database
-    productos = models.Clientes.objects.all()
-    # user=[]
-    # for index, p in enumerate(productos):
-    #     user += models.Usuarios.objects.filter(idclientes=p)
-    #     print(user[index].idclientes.nombre)
+    pcliente = models.Clientecategoria.objects.all()
+    productos = []
+    for p in pcliente:
+        productos.append(p.idcliente)
 
-    imagenes = models.Imagenes.objects.filter(~Q(nombre='slider'))
+    imagenes = []
+    for p in productos:
+        imagenes += models.Clienteimagen.objects.filter(idcliente=p)
+    print(imagenes)
 
     # Paginacion : llamar metodo pagination
     datos_pagination = pagination.pagination(productos, page)
@@ -231,8 +306,16 @@ def agenda(request, page):
 
 def agenda_categoria(request, page, categoria):
     # database
-    productos = models.Clientes.objects.all()
-    imagenes = models.Imagenes.objects.filter(~Q(nombre='slider'))
+    cat = categorias.get(categoria=categoria)
+    pcliente = models.Clientecategoria.objects.filter(idcategoria=cat)
+    productos = []
+    for p in pcliente:
+        productos.append(p.idcliente)
+
+    imagenes = []
+    for p in productos:
+        imagenes += models.Clienteimagen.objects.filter(idcliente=p)
+    print(imagenes)
 
     # Paginacion : llamar metodo pagination
     datos_pagination = pagination.pagination(productos, page)
@@ -253,8 +336,15 @@ def agenda_detalle(request, id):
 # MENSAJERIA
 def mensajeria(request, page):
     # database
-    productos = models.Clientes.objects.all()
-    imagenes = models.Imagenes.objects.filter(~Q(nombre='slider'))
+    pcliente = models.Clientecategoria.objects.all()
+    productos = []
+    for p in pcliente:
+        productos.append(p.idcliente)
+
+    imagenes = []
+    for p in productos:
+        imagenes += models.Clienteimagen.objects.filter(idcliente=p)
+    print(imagenes)
 
     # Paginacion : llamar metodo pagination
     datos_pagination = pagination.pagination(productos, page)

@@ -12,16 +12,16 @@ urlpatterns = [
 
     path('login/', views.login, name='login'),
     path('register/', views.registro, name='registro'),
-    path('logout/', views.home, name='logout'),
+    path('logout/', views.salir, name='logout'),
 
-    path('product/<int:page>', views.producto, name='producto'),
-    path('product/<slug:tipo>/<int:page>/', views.producto_filtro_tipo, name='producto-filtro-tipo'),
-    path('product/<slug:tipo>/<slug:categoria>/<int:page>/', views.producto_filtro_categoria, name='producto-filtro-categoria'),
+    path('product/<slug:sexo>/<int:page>', views.producto, name='producto'),
+    path('product/<slug:tipo>/<slug:sexo>/<int:page>/', views.producto_filtro_tipo, name='producto-filtro-tipo'),
+    path('product/<slug:tipo>/<slug:categoria>/<slug:sexo>/<int:page>/', views.producto_filtro_categoria, name='producto-filtro-categoria'),
     path('product_detail/<int:id>', views.producto_detalle),
 
-    path('disign/<int:page>', views.diseno),
-    path('disign/<slug:tipo>/<int:page>/', views.diseno_filtro_tipo, name='diseno-filtro-tipo'),
-    path('disign/<slug:tipo>/<slug:categoria>/<int:page>/', views.diseno_filtro_categoria, name='diseno-filtro-categoria'),
+    path('disign/<slug:sexo>/<int:page>', views.diseno),
+    path('disign/<slug:tipo>/<slug:sexo>/<int:page>/', views.diseno_filtro_tipo, name='diseno-filtro-tipo'),
+    path('disign/<slug:tipo>/<slug:categoria>/<slug:sexo>/<int:page>/', views.diseno_filtro_categoria, name='diseno-filtro-categoria'),
     path('disign_detail/<int:id>', views.diseno_detalle),
 
     path('contact/<int:page>', views.agenda),
@@ -39,8 +39,11 @@ urlpatterns = [
     path('user/changeKey', views.changeKey),
     path('user/orders', views.pedidos),
     path('user/orders_detail/<int:id>', views.pedidos_detalle),
+
     path('user/mydisign/<int:page>', views.misdisenos),
+
     path('user/myproduct/<int:page>', views.misproductos),
+
     path('user/favorites/<int:page>', views.favoritos),
 
 ]

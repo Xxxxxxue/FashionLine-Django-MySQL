@@ -17,23 +17,23 @@
                 <ul class="navbar-nav mr-auto">
                     <!--PRODUCTO-->
                     <li class="nav-item dropdown mx-1">
-                        <a class="nav-link dropdown-toggle" href="/product/1" id="navbarDropdown" role="button"
+                        <a class="nav-link dropdown-toggle" href="/product/mujer/1" id="navbarDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Productos en venta
                         </a>
                         <div class="dropdown-menu navmenu min-width:100px" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item mx-3 font-weight-bold" href="/product/1"
+                            <a class="dropdown-item mx-3 font-weight-bold" href="/product/mujer/1"
                                style="font-size: 20px;">Novedades</a>
                             <div class="container-fluid row ">
 
                                  {%for t in tipo%}
                                     {%if t.tipo != "usuarios"%}
                                     <div class="col m-3">
-                                        <a class="dropdown-item pl-2" href="/product/{{t.tipo}}/1">{{t.tipo|capfirst}}</a>
+                                        <a class="dropdown-item pl-2" href='/product/{{t.tipo|cut:" "}}/mujer/1'>{{t.tipo|capfirst}}</a>
                                         <div class="dropdown-divider"></div>
                                         {%for c in categorias%}
                                         {%if c.idtipocad == t%}
-                                        <a class="dropdown-item" href="/product/{{t.tipo}}/{{c.categoria}}/1">{{c.categoria|capfirst}}</a>
+                                        <a class="dropdown-item" href='/product/{{t.tipo|cut:" "}}/{{c.categoria|iriencode|cut:" "}}/mujer/1'>{{c.categoria|capfirst}}</a>
                                         {%endif%}
                                         {%endfor%}
                                     </div>
@@ -45,23 +45,23 @@
                     </li>
                     <!--DISENO-->
                     <li class="nav-item dropdown mx-1">
-                        <a class="nav-link dropdown-toggle" href="/disign/1" id="navbarDropdown1" role="button"
+                        <a class="nav-link dropdown-toggle" href="/disign/mujer/1" id="navbarDropdown1" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Diseños
                         </a>
                         <div class="dropdown-menu navmenu" aria-labelledby="navbarDropdown1">
-                            <a class="dropdown-item mx-3 font-weight-bold" href="/disign/1"
+                            <a class="dropdown-item mx-3 font-weight-bold" href="/disign/mujer/1"
                                style="font-size: 20px;">Novedades</a>
                             <div class="container-fluid row">
 
                                 {%for t in tipo%}
                                     {%if t.tipo != "usuarios"%}
                                     <div class="col m-3">
-                                        <a class="dropdown-item pl-2" href="/disign/{{t.tipo}}/1">{{t.tipo|capfirst}}</a>
+                                        <a class="dropdown-item pl-2" href="/disign/{{t.tipo}}/mujer/1">{{t.tipo|capfirst}}</a>
                                         <div class="dropdown-divider"></div>
                                         {%for c in categorias%}
                                         {%if c.idtipocad == t%}
-                                        <a class="dropdown-item" href="/disign/{{t.tipo}}/{{c.categoria}}/1">{{c.categoria|capfirst}}</a>
+                                        <a class="dropdown-item" href="/disign/{{t.tipo}}/{{c.categoria}}/mujer/1">{{c.categoria|capfirst}}</a>
                                         {%endif%}
                                         {%endfor%}
                                     </div>
@@ -101,7 +101,7 @@
                     </li>
                     <!--MENSAJERIA-->
                     <li class="nav-item mx-1">
-                        <a class="nav-link disabled" href="/message/1">Mensajeria</a>
+                        <a class="nav-link" href="/message/1">Mensajeria</a>
                     </li>
                     <!--USUARIO EN PANTALLA CHICA-->
                     <li class="nav-item dropdown mx-1 d-lg-none d-block">

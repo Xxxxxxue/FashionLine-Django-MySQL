@@ -181,7 +181,7 @@
     margin: 0 auto;
 }
 .user_perfil {
-    max-height: 100px;
+    max-height: 140px;
     margin: auto;
     padding: 2%; 
     /* vertical-align: middle; */
@@ -192,6 +192,14 @@
     border: 5px solid #f8df72;
     border-radius: 50%;
     background-color: #43b244;
+}
+.divimg {height: 150px;}
+.agenda-p {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    word-wrap: break-word;
+    overflow: hidden;
 }
 .agenda-card-link {
     text-decoration: none;
