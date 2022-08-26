@@ -13,6 +13,10 @@ class Categorias(models.Model):
     categoria = models.CharField(db_column='Categoria', max_length=45, blank=True, null=True)  # Field name made lowercase.
     idtipocad = models.ForeignKey('Tipocategoria', db_column='idTipoCad', blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
 
+    def getCat(self):
+        cad = self.categoria.replace('ñ','n')
+        return cad.replace(' ','-')
+
     class Meta:
         ordering = ['id']
         db_table = 'categorias'
@@ -57,7 +61,17 @@ class Clientes(models.Model):
     nif = models.CharField(db_column='NIF', max_length=9, blank=True, null=True)  # Field name made lowercase.
     cuenta = models.CharField(db_column='Cuenta', max_length=24, blank=True, null=True)  # Field name made lowercase.
     descripcion = models.TextField(blank=True, null=True)
-    name_usuario = models.CharField(max_length=150, blank=True, null=True)
+    icon = models.CharField(db_column='icon', max_length=250, blank=True, null=True)
+
+    def getImagen(self):
+        return self.clienteimagen.idimagen.imagen
+        # mas de un valor, no se saca, si cambia a cliente como clave ajena y crear un list,funciona
+
+    def getUser(self):
+        return self.usuarios_set.first()
+
+    def getCategoria(self):
+        return self.clientecategoria.idcategoria.categoria
 
     class Meta:
         ordering = ['id']
@@ -97,8 +111,8 @@ class Disenocategoria(models.Model):
 
 
 class Disenocolor(models.Model):
-    iddiseno = models.OneToOneField('Disenos', db_column='idDiseno', primary_key=True, on_delete=models.CASCADE)  # Field name made lowercase.
-    idcolor = models.ForeignKey(Colores, db_column='idColor', on_delete=models.CASCADE)  # Field name made lowercase.
+    iddiseno = models.ForeignKey('Disenos', db_column='idDiseno',  on_delete=models.CASCADE)  # Field name made lowercase.
+    idcolor = models.OneToOneField(Colores, db_column='idColor', primary_key=True,on_delete=models.CASCADE)  # Field name made lowercase.
 
     class Meta:
         db_table = 'disenocolor'
@@ -124,10 +138,36 @@ class Disenos(models.Model):
     idestado = models.ForeignKey('Estados', db_column='idEstado', blank=True, null=True, on_delete=models.SET_NULL)  # Field name made lowercase.
 
     def getTipo(self):
-        return self.disenocategoria_set.first().idcategoria.idtipocad.tipo
+        tipo =self.disenocategoria_set.first().idcategoria.idtipocad.tipo
+        return tipo.replace('ñ','n')
 
     def getCategoria(self):
-        return self.disenocategoria_set.first().idcategoria.categoria
+        cad = self.disenocategoria_set.first().idcategoria.categoria
+        return cad.replace('ñ','n')
+
+    def getImagen(self):
+        imagenList = []
+        for i in self.disenoimagen_set.all():
+            img = i.idimagen
+            if img not in imagenList:
+                imagenList.append(img)
+        return imagenList
+
+    def getColor(self):
+        colorList = []
+        for c in self.disenocolor_set.all():
+            color = c.idcolor
+            if color not in colorList:
+                colorList.append(color)
+        return colorList
+
+    def getTalla(self):
+        tallaList = []
+        for t in self.disenotalla_set.all():
+            talla = t.idtalla
+            if talla not in tallaList:
+                tallaList.append(talla)
+        return tallaList
 
     class Meta:
         ordering = ['id']
@@ -144,8 +184,8 @@ class Disenosexo(models.Model):
 
 
 class Disenotalla(models.Model):
-    iddiseno = models.OneToOneField(Disenos, db_column='idDiseno', primary_key=True, on_delete=models.CASCADE)  # Field name made lowercase.
-    idtalla = models.ForeignKey('Tallas', db_column='idTalla', on_delete=models.CASCADE)  # Field name made lowercase.
+    iddiseno = models.ForeignKey(Disenos, db_column='idDiseno', on_delete=models.CASCADE)  # Field name made lowercase.
+    idtalla = models.OneToOneField('Tallas', db_column='idTalla', primary_key=True, on_delete=models.CASCADE)  # Field name made lowercase.
 
     class Meta:
         db_table = 'disenotalla'
@@ -251,8 +291,8 @@ class Productocontenido(models.Model):
 
 
 class Productoimagen(models.Model):
-    idproducto = models.OneToOneField('Productos', db_column='idProducto', primary_key=True, on_delete=models.CASCADE)  # Field name made lowercase.
-    idimagen = models.ForeignKey(Imagenes, db_column='idImagen', on_delete=models.CASCADE)  # Field name made lowercase.
+    idproducto = models.ForeignKey('Productos', db_column='idProducto',  on_delete=models.CASCADE)  # Field name made lowercase.
+    idimagen = models.OneToOneField(Imagenes, db_column='idImagen', primary_key=True, on_delete=models.CASCADE)  # Field name made lowercase.
 
     class Meta:
         db_table = 'productoimagen'
@@ -273,11 +313,36 @@ class Productos(models.Model):
     idusuario = models.ForeignKey('Usuarios', db_column='idUsuario', blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
 
     def getTipo(self):
-        return self.productocategoria_set.first().idcategoria.idtipocad.tipo
+        tipo = self.productocategoria_set.first().idcategoria.idtipocad.tipo
+        return tipo.replace('ñ','n')
 
     def getCategoria(self):
-        return self.productocategoria_set.first().idcategoria.categoria
+        cad = self.productocategoria_set.first().idcategoria.categoria
+        return cad.replace('ñ','n')
 
+    def getImagen(self):
+        imagenList = []
+        for i in self.productoimagen_set.all():
+            img = i.idimagen
+            if img not in imagenList:
+                imagenList.append(img)
+        return imagenList
+
+    def getColor(self):
+        colorList = []
+        for c in self.productocontenido_set.all():
+            color = c.idcolor
+            if color not in colorList:
+                colorList.append(color)
+        return colorList
+
+    def getTalla(self):
+        tallaList = []
+        for t in self.productocontenido_set.all():
+            talla = t.idtalla
+            if talla not in tallaList:
+                tallaList.append(talla)
+        return tallaList
 
     class Meta:
         ordering = ['id']
@@ -375,12 +440,16 @@ class Usuarios(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     usuario = models.CharField(max_length=45)
     contrasena = models.CharField(max_length=50)
-    tipousuario = models.IntegerField(db_column='tipoUsuario')  # Field name made lowercase.
+    tipousuario = models.IntegerField(db_column='tipoUsuario', default=0 )  # Field name made lowercase.
     idclientes = models.ForeignKey(Clientes, db_column='idClientes', blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
+
+    def __str__(self):
+        return "( " + str(self.id) + " ) - " + self.usuario
 
     class Meta:
         ordering = ['id']
         db_table = 'usuarios'
+
 
 
 class Valoraciones(models.Model):

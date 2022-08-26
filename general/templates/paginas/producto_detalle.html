@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {%load static%}
+{%load mytags%}
 
 {%block title%}Detalle del Producto | Fashion Line{%endblock%}
 
@@ -11,40 +12,43 @@
         <div class="row">
             <div class="col-lg-6 col-md">
                 <!--slider con fotos-->
-                {%include 'componentes/slider.html'%}
+                {%include 'componentes/slider.html' with slider=producto.getImagen%}
             </div>
             <div class="col-lg-6 col-md pl-5">
                 <!--detalles-->
-                <h3>{{producto.nombre}}</h3>
+                <h3>{{producto.nombre|capfirst}}</h3>
                 <br>
                 <h5>Precio: {{producto.precio}} €</h5>
                 {%if producto.oferta%}
                 <h3>Precio actual: {{producto.precioactual}} €</h3>
                 {%endif%}
                 <div class="mt-5">
-                    <h5>Color:<span>blanco</span></h5>
+                    <h5>Color:</h5>
                     <div>
-                        <span><button class="boton-color"></button> </span>
-
+                        {%for c in producto.getColor%}
+                        <span><button class="boton-color" id="{{c.id}}" style="background-color: {{c.color}}"></button> </span>
+                        {%endfor%}
                     </div>
                 </div>
                 <div class="mt-5">
-                    <h5>Tamaño</h5>
+                    <h5>Tamaño:</h5>
                     <div>
-                        <span><button class="boton-talla">M</button></span>
+                       {%for t in producto.getTalla%}
+                        <span><button class="boton-talla" id="{{t.id}}">{{t.talla}}</button></span>
+                        {%endfor%}
                     </div>
                 </div>
                 <div class="mt-5">
                     <h5>Cantidad</h5>
                     <div>
                         <button class="btn btn-success num-minu"> -</button>
-                        <input class="cantidad" type="number" name="cantidad" id="cantidad">
+                        <input class="cantidad" type="number" min="0" name="cantidad" id="cantidad" value="1">
                         <button class="btn btn-success num-add"> +</button>
                     </div>
                 </div>
-                <span><button class="boton-producto mt-5">Añadir a la cesta</button></span>
+                <a href="/cart"><button class="boton-producto mt-5">Añadir a la cesta</button></a>
                 <p class="mt-5 text-danger">¿Necesitas más ayuda?</p>
-                <span><button class="boton-producto">Contactarnos</button></span>
+                <a href="/message_chat/1"><button class="boton-producto">Contactarnos</button></a>
             </div>
         </div>
 

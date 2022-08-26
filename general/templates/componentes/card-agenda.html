@@ -7,13 +7,7 @@
         <a class="agenda-card-link" href="/contact_detail/{{p.id}}">
             <div class="row">
                 <div class="col-3 divimg">
-                    {% for i in imagenes %}
-                    <!--{{i.id}}
-                    {{p}}-->
-                    {% if i.idcliente == p %}
-                    <img class="user_perfil" src="{{i.idimagen.imagen}}" alt="perfil">
-                    {%endif%}
-                    {%endfor%}
+                    <img class="user_perfil" src="{{p.icon}}" alt="perfil">
                 </div>
                 <div class="col-9 pt-3">
                     <h3>{{p.nombre|capfirst}}</h3>
