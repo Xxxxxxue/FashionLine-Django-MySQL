@@ -61,20 +61,19 @@ def login(request):
     password = request.POST.get('password')
     # u = auth.authenticate(username=username, password=password)
     # proteger password
-    md5 = hashlib.md5()
-    md5.update(password.encode())
-    pass_md5 = md5.hexdigest()
-    u = models.Usuarios.objects.filter(usuario=username, contrasena=pass_md5).get()
-
-    if u:
-        num = str(u.id)
+    # md5 = hashlib.md5()
+    # md5.update(password.encode())
+    # pass_md5 = md5.hexdigest()
+    # u = models.Usuarios.objects.filter(usuario=username, contrasena=pass_md5).get()
+    user = auth.authenticate(username=username, password=password)
+    if user:
+        # num = str(u.id)
         # no funciona session debido a que necesita la tabla session en bbdd
-        request.session['user'] = u
-        return redirect('/user/profile/'+num)
-        # auth.login(request, u)
-        # path = request.GET.get("next") or "/user/profile/1"
-        # print(path)
-        # return redirect(path)
+        # request.session['user'] = u
+        # return redirect('/user/profile/'+num)
+        auth.login(request, user)
+        return redirect("/")
+
 
     error_msg = 'Usuario o Contraseña está incorrecto.'
     return render(request, "paginas/login.html", {'tipo': tipocad, 'categorias':categorias, 'error_msg': error_msg})
@@ -90,24 +89,27 @@ def registro(request):
     password = request.POST.get('password')
     nombre = request.POST.get('nombre')
     apellido = request.POST.get('apellido')
-    u = models.Usuarios.objects.filter(usuario=username)
+    u = User.objects.filter(username=username)
     # si esta ya registrado?
     if u:
         msg = 'Usuario ya está registrado.'
         return render(request, "paginas/registro.html", {'tipo': tipocad, 'categorias':categorias, 'msg':msg})
 
     # proteger password
-    md5 = hashlib.md5()
-    md5.update(password.encode())
-    pass_md5 = md5.hexdigest()
-    user = models.Usuarios.objects.create(usuario=username, contrasena=pass_md5)
-    cliente = models.Clientes.objects.create(nombre=nombre,apellidos=apellido, email=username)
-    models.Usuarios.objects.filter(usuario=username).update(idclientes=cliente)
+    # md5 = hashlib.md5()
+    # md5.update(password.encode())
+    # pass_md5 = md5.hexdigest()
+    # user = models.Usuarios.objects.create(usuario=username, contrasena=pass_md5)
+    # cliente = models.Clientes.objects.create(nombre=nombre, apellidos=apellido, email=username)
+    # models.Usuarios.objects.filter(usuario=username).update(idclientes=cliente)
 
-    # si esta registrado
+    # crear usuario
+    user = User.objects.create_user(username=username, password=password)
+    print(user)
+    # registrado, inicia sesion
     if user:
         id = str(user.id)
-        request.session['user'] = user[0]
+        auth.login(request, user)
         return HttpResponseRedirect('/user/profile/'+id)
 
     return redirect(registro)
@@ -121,7 +123,7 @@ def salir(request):
     # return redirect(home)
     ppp = auth.logout(request)
     print(ppp)  # None
-    return redirect("/home")
+    return redirect("/")
 
 ########################################################################################################################
 

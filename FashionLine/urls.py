@@ -19,9 +19,6 @@ urlpatterns = [
     path('product/<slug:tipo>/<slug:categoria>/<slug:sexo>/<int:page>/', views.producto_filtro_categoria, name='producto-filtro-categoria'),
     path('product_detail/<int:id>', views.producto_detalle),
 
-    path('product/<int:iduser>/<slug:sexo>/<int:page>', views.producto_user),
-    path('disign/<int:iduser>/<slug:sexo>/<int:page>', views.diseno_user),
-
     path('disign/<slug:sexo>/<int:page>', views.diseno),
     path('disign/<slug:tipo>/<slug:sexo>/<int:page>/', views.diseno_filtro_tipo, name='diseno-filtro-tipo'),
     path('disign/<slug:tipo>/<slug:categoria>/<slug:sexo>/<int:page>/', views.diseno_filtro_categoria, name='diseno-filtro-categoria'),

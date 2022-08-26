@@ -6,7 +6,7 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
-
+from django.contrib.auth.models import User
 
 class Categorias(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
@@ -14,43 +14,34 @@ class Categorias(models.Model):
     idtipocad = models.ForeignKey('Tipocategoria', db_column='idTipoCad', blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
 
     def getCat(self):
-        cad = self.categoria.replace('ñ','n')
-        return cad.replace(' ','-')
+        cad = self.categoria.replace('ñ', 'n')
+        return cad.replace(' ', '-')
 
     class Meta:
         ordering = ['id']
+
         db_table = 'categorias'
+
+
+class Estados(models.Model):
+    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    estado = models.CharField(db_column='Estado', max_length=50, blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        ordering = ['id']
+        db_table = 'estados'
 
 
 class Cestas(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     fcreacion = models.DateTimeField(db_column='Fcreacion', blank=True, null=True)  # Field name made lowercase.
     fultimo = models.DateTimeField(db_column='Fultimo', blank=True, null=True)  # Field name made lowercase.
-    idusuario = models.ForeignKey('Usuarios', db_column='idUsuario', blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
-    idestados = models.ForeignKey('Estados', db_column='idEstados', blank=True, null=True, on_delete=models.SET_NULL)  # Field name made lowercase.
+    idusuario = models.ForeignKey(User, on_delete=models.CASCADE, db_column='idUsuario', blank=True, null=True)  # Field name made lowercase.
+    idestados = models.ForeignKey(Estados, models.DO_NOTHING, db_column='idEstados', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         ordering = ['id']
         db_table = 'cestas'
-
-
-class Clientecategoria(models.Model):
-    idcliente = models.OneToOneField('Clientes', db_column='idCliente', primary_key=True, on_delete=models.CASCADE)  # Field name made lowercase.
-    idcategoria = models.ForeignKey(Categorias, db_column='idCategoria', on_delete=models.CASCADE)  # Field name made lowercase.
-
-    class Meta:
-        db_table = 'clientecategoria'
-        unique_together = (('idcliente', 'idcategoria'),)
-
-
-class Clienteimagen(models.Model):
-    idcliente = models.OneToOneField('Clientes', db_column='idCliente', primary_key=True, on_delete=models.CASCADE)  # Field name made lowercase.
-    idimagen = models.ForeignKey('Imagenes', db_column='idImagen', on_delete=models.CASCADE)  # Field name made lowercase.
-
-    class Meta:
-        db_table = 'clienteimagen'
-        unique_together = (('idcliente', 'idimagen'),)
-
 
 class Clientes(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
@@ -61,7 +52,9 @@ class Clientes(models.Model):
     nif = models.CharField(db_column='NIF', max_length=9, blank=True, null=True)  # Field name made lowercase.
     cuenta = models.CharField(db_column='Cuenta', max_length=24, blank=True, null=True)  # Field name made lowercase.
     descripcion = models.TextField(blank=True, null=True)
-    icon = models.CharField(db_column='icon', max_length=250, blank=True, null=True)
+    icon = models.CharField(max_length=250, blank=True, null=True)
+    idusuario = models.ForeignKey(User, on_delete=models.CASCADE, db_column='idUsuario', blank=True, null=True)
+
 
     def getImagen(self):
         return self.clienteimagen.idimagen.imagen
@@ -76,6 +69,24 @@ class Clientes(models.Model):
     class Meta:
         ordering = ['id']
         db_table = 'clientes'
+
+
+class Clientecategoria(models.Model):
+    idcliente = models.OneToOneField('Clientes', db_column='idCliente', primary_key=True, on_delete=models.CASCADE)  # Field name made lowercase.
+    idcategoria = models.ForeignKey(Categorias, db_column='idCategoria', on_delete=models.CASCADE)  # Field name made lowercase.
+
+    class Meta:
+        db_table = 'clientecategoria'
+        unique_together = (('idcliente', 'idcategoria'),)
+
+
+class Clienteimagen(models.Model):
+    idcliente = models.OneToOneField('Clientes', on_delete=models.CASCADE, db_column='idCliente', primary_key=True)  # Field name made lowercase.
+    idimagen = models.ForeignKey('Imagenes', on_delete=models.CASCADE, db_column='idImagen')  # Field name made lowercase.
+
+    class Meta:
+        db_table = 'clienteimagen'
+        unique_together = (('idcliente', 'idimagen'),)
 
 
 class Colores(models.Model):
@@ -94,7 +105,7 @@ class Direcciones(models.Model):
     cporta = models.IntegerField(db_column='CPorta', blank=True, null=True)  # Field name made lowercase.
     provincia = models.CharField(db_column='Provincia', max_length=45, blank=True, null=True)  # Field name made lowercase.
     pais = models.CharField(db_column='Pais', max_length=45, blank=True, null=True)  # Field name made lowercase.
-    idcliente = models.ForeignKey(Clientes, db_column='idCliente', blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
+    idcliente = models.ForeignKey(Clientes, on_delete=models.CASCADE, db_column='idCliente', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         ordering = ['id']
@@ -102,8 +113,8 @@ class Direcciones(models.Model):
 
 
 class Disenocategoria(models.Model):
-    idcategoria = models.OneToOneField(Categorias, db_column='idCategoria',primary_key=True, on_delete=models.CASCADE)  # Field name made lowercase.
-    iddiseno = models.ForeignKey('Disenos', db_column='idDiseno', on_delete=models.CASCADE)  # Field name made lowercase.
+    iddiseno = models.OneToOneField('Disenos', db_column='idDiseno', primary_key=True,on_delete=models.CASCADE)  # Field name made lowercase.
+    idcategoria = models.ForeignKey(Categorias, db_column='idCategoria',on_delete=models.CASCADE)  # Field name made lowercase.
 
     class Meta:
         db_table = 'disenocategoria'
@@ -111,8 +122,8 @@ class Disenocategoria(models.Model):
 
 
 class Disenocolor(models.Model):
-    iddiseno = models.ForeignKey('Disenos', db_column='idDiseno',  on_delete=models.CASCADE)  # Field name made lowercase.
-    idcolor = models.OneToOneField(Colores, db_column='idColor', primary_key=True,on_delete=models.CASCADE)  # Field name made lowercase.
+    iddiseno = models.OneToOneField('Disenos', db_column='idDiseno', primary_key=True,on_delete=models.CASCADE)  # Field name made lowercase.
+    idcolor = models.ForeignKey(Colores, db_column='idColor',on_delete=models.CASCADE)  # Field name made lowercase.
 
     class Meta:
         db_table = 'disenocolor'
@@ -120,8 +131,8 @@ class Disenocolor(models.Model):
 
 
 class Disenoimagen(models.Model):
-    iddiseno = models.ForeignKey('Disenos', db_column='idDiseno', on_delete=models.CASCADE)  # Field name made lowercase.
-    idimagen = models.OneToOneField('Imagenes', db_column='idImagen', primary_key=True, on_delete=models.CASCADE)  # Field name made lowercase.
+    iddiseno = models.OneToOneField('Disenos',db_column='idDiseno', primary_key=True,on_delete=models.CASCADE)  # Field name made lowercase.
+    idimagen = models.ForeignKey('Imagenes', db_column='idImagen',on_delete=models.CASCADE)  # Field name made lowercase.
 
     class Meta:
         db_table = 'disenoimagen'
@@ -134,16 +145,16 @@ class Disenos(models.Model):
     descripcion = models.CharField(max_length=255, blank=True, null=True)
     precio = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     fecha = models.DateTimeField(blank=True, null=True)
-    idusuario = models.ForeignKey('Usuarios', db_column='idUsuario', blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
-    idestado = models.ForeignKey('Estados', db_column='idEstado', blank=True, null=True, on_delete=models.SET_NULL)  # Field name made lowercase.
+    idusuario = models.ForeignKey(User, on_delete=models.CASCADE, db_column='idUsuario', blank=True, null=True)  # Field name made lowercase.
+    idestado = models.ForeignKey('Estados', db_column='idEstado', blank=True, null=True,on_delete=models.CASCADE)  # Field name made lowercase.
 
     def getTipo(self):
-        tipo =self.disenocategoria_set.first().idcategoria.idtipocad.tipo
-        return tipo.replace('ñ','n')
+        tipo = self.disenocategoria_set.first().idcategoria.idtipocad.tipo
+        return tipo.replace('ñ', 'n')
 
     def getCategoria(self):
         cad = self.disenocategoria_set.first().idcategoria.categoria
-        return cad.replace('ñ','n')
+        return cad.replace('ñ', 'n')
 
     def getImagen(self):
         imagenList = []
@@ -173,7 +184,6 @@ class Disenos(models.Model):
         ordering = ['id']
         db_table = 'disenos'
 
-
 class Disenosexo(models.Model):
     iddiseno = models.OneToOneField(Disenos, db_column='idDiseno', primary_key=True, on_delete=models.CASCADE)  # Field name made lowercase.
     idsexo = models.ForeignKey('Sexos', db_column='idSexo', on_delete=models.CASCADE)  # Field name made lowercase.
@@ -182,10 +192,9 @@ class Disenosexo(models.Model):
         db_table = 'disenosexo'
         unique_together = (('iddiseno', 'idsexo'),)
 
-
 class Disenotalla(models.Model):
-    iddiseno = models.ForeignKey(Disenos, db_column='idDiseno', on_delete=models.CASCADE)  # Field name made lowercase.
-    idtalla = models.OneToOneField('Tallas', db_column='idTalla', primary_key=True, on_delete=models.CASCADE)  # Field name made lowercase.
+    iddiseno = models.OneToOneField(Disenos, db_column='idDiseno', primary_key=True, on_delete=models.CASCADE)  # Field name made lowercase.
+    idtalla = models.ForeignKey('Tallas', db_column='idTalla', on_delete=models.CASCADE)  # Field name made lowercase.
 
     class Meta:
         db_table = 'disenotalla'
@@ -194,7 +203,7 @@ class Disenotalla(models.Model):
 
 class Disenovalora(models.Model):
     iddiseno = models.OneToOneField(Disenos, db_column='idDiseno', primary_key=True, on_delete=models.CASCADE)  # Field name made lowercase.
-    idusuario = models.ForeignKey('Usuarios', db_column='idUsuario', on_delete=models.CASCADE)  # Field name made lowercase.
+    idusuario = models.ForeignKey(User, on_delete=models.CASCADE, db_column='idUsuario')  # Field name made lowercase.
     idvaloracion = models.ForeignKey('Valoraciones', db_column='idValoracion', blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
 
     class Meta:
@@ -202,18 +211,9 @@ class Disenovalora(models.Model):
         unique_together = (('iddiseno', 'idusuario'),)
 
 
-class Estados(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    estado = models.CharField(db_column='Estado', max_length=50, blank=True, null=True)  # Field name made lowercase.
-
-    class Meta:
-        ordering = ['id']
-        db_table = 'estados'
-
-
 class Gustodiseno(models.Model):
     iddiseno = models.OneToOneField(Disenos, db_column='idDiseno', primary_key=True, on_delete=models.CASCADE)  # Field name made lowercase.
-    idusuario = models.ForeignKey('Usuarios', db_column='idUsuario', on_delete=models.CASCADE)  # Field name made lowercase.
+    idusuario = models.ForeignKey(User, on_delete=models.CASCADE, db_column='idUsuario')  # Field name made lowercase.
     gusta = models.IntegerField(blank=True, null=True)
 
     class Meta:
@@ -243,26 +243,25 @@ class Iva(models.Model):
 class Lineacesta(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     idproducto = models.ForeignKey('Productos', db_column='idProducto', blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
-    idcesta = models.ForeignKey(Cestas, db_column='idCesta', blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
+    idcesta = models.ForeignKey(Cestas,  db_column='idCesta', blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
     preciounitario = models.DecimalField(db_column='PrecioUnitario', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
     cantidad = models.IntegerField(db_column='Cantidad', blank=True, null=True)  # Field name made lowercase.
     total = models.DecimalField(db_column='Total', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
-    idpromocion = models.ForeignKey('Promociones', db_column='idPromocion', blank=True, null=True, on_delete=models.SET_NULL)  # Field name made lowercase.
-    idestado = models.ForeignKey(Estados, db_column='idEstado', blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
+    idpromocion = models.ForeignKey('Promociones', models.DO_NOTHING, db_column='idPromocion', blank=True, null=True)  # Field name made lowercase.
+    idestado = models.ForeignKey(Estados, models.DO_NOTHING, db_column='idEstado', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        ordering = ['id']
         db_table = 'lineacesta'
 
 
 class Mensajes(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    idusuario = models.ForeignKey('Usuarios', db_column='idUsuario', blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
+    idusuario = models.ForeignKey(User, on_delete=models.CASCADE, db_column='idUsuario', blank=True, null=True)  # Field name made lowercase.
     idsala = models.ForeignKey('Salas', db_column='idSala', blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
     mensaje = models.TextField(blank=True, null=True)
     fecha = models.DateTimeField(blank=True, null=True)
-    idtipomensaje = models.ForeignKey('Tipomensaje', db_column='idTipoMensaje', blank=True, null=True, on_delete=models.SET_NULL)  # Field name made lowercase.
     url = models.CharField(max_length=2500, blank=True, null=True)
+    idestado = models.ForeignKey(Estados, models.DO_NOTHING, db_column='idEstado', blank=True, null=True)
 
     class Meta:
         ordering = ['id']
@@ -279,11 +278,11 @@ class Productocategoria(models.Model):
 
 
 class Productocontenido(models.Model):
-    id = models.IntegerField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    idproducto = models.ForeignKey('Productos', db_column='idProducto', on_delete=models.CASCADE)  # Field name made lowercase.
-    idtalla = models.ForeignKey('Tallas', db_column='idTalla', on_delete=models.CASCADE)  # Field name made lowercase.
+    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    idproducto = models.ForeignKey('Productos',  db_column='idProducto', on_delete=models.CASCADE)  # Field name made lowercase.
+    idtalla = models.ForeignKey('Tallas',  db_column='idTalla', on_delete=models.CASCADE)  # Field name made lowercase.
     idcolor = models.ForeignKey(Colores, db_column='idColor', on_delete=models.CASCADE)  # Field name made lowercase.
-    idestado = models.ForeignKey(Estados, db_column='idEstado', blank=True, null=True, on_delete=models.SET_NULL)  # Field name made lowercase.
+    idestado = models.ForeignKey(Estados, models.DO_NOTHING, db_column='idEstado', blank=True, null=True)  # Field name made lowercase.
     cantidad = models.IntegerField(blank=True, null=True)
 
     class Meta:
@@ -291,8 +290,8 @@ class Productocontenido(models.Model):
 
 
 class Productoimagen(models.Model):
-    idproducto = models.ForeignKey('Productos', db_column='idProducto',  on_delete=models.CASCADE)  # Field name made lowercase.
-    idimagen = models.OneToOneField(Imagenes, db_column='idImagen', primary_key=True, on_delete=models.CASCADE)  # Field name made lowercase.
+    idproducto = models.OneToOneField('Productos', db_column='idProducto', primary_key=True, on_delete=models.CASCADE)  # Field name made lowercase.
+    idimagen = models.ForeignKey(Imagenes, db_column='idImagen', on_delete=models.CASCADE)  # Field name made lowercase.
 
     class Meta:
         db_table = 'productoimagen'
@@ -309,16 +308,16 @@ class Productos(models.Model):
     oferta = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     precioactual = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     fecha = models.DateTimeField(blank=True, null=True)
-    idiva = models.ForeignKey(Iva, db_column='idIVA', blank=True, null=True, on_delete=models.SET_NULL)  # Field name made lowercase.
-    idusuario = models.ForeignKey('Usuarios', db_column='idUsuario', blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
+    idiva = models.ForeignKey(Iva, models.DO_NOTHING, db_column='idIVA', blank=True, null=True)  # Field name made lowercase.
+    idusuario = models.ForeignKey(User, on_delete=models.CASCADE, db_column='idUsuario', blank=True, null=True)  # Field name made lowercase.
 
     def getTipo(self):
         tipo = self.productocategoria_set.first().idcategoria.idtipocad.tipo
-        return tipo.replace('ñ','n')
+        return tipo.replace('ñ', 'n')
 
     def getCategoria(self):
         cad = self.productocategoria_set.first().idcategoria.categoria
-        return cad.replace('ñ','n')
+        return cad.replace('ñ', 'n')
 
     def getImagen(self):
         imagenList = []
@@ -360,7 +359,7 @@ class Productosexo(models.Model):
 
 class Productovalora(models.Model):
     idproducto = models.OneToOneField(Productos, db_column='idProducto', primary_key=True, on_delete=models.CASCADE)  # Field name made lowercase.
-    idusuario = models.ForeignKey('Usuarios', db_column='idUsuario', on_delete=models.CASCADE)  # Field name made lowercase.
+    idusuario = models.ForeignKey(User, on_delete=models.CASCADE, db_column='idUsuario')  # Field name made lowercase.
     idvaloracion = models.ForeignKey('Valoraciones', db_column='idValoracion', blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
 
     class Meta:
@@ -375,7 +374,7 @@ class Promociones(models.Model):
     descripcion = models.TextField(db_column='Descripcion', blank=True, null=True)  # Field name made lowercase.
     finicio = models.DateTimeField(db_column='Finicio', blank=True, null=True)  # Field name made lowercase.
     ffin = models.DateTimeField(db_column='Ffin', blank=True, null=True)  # Field name made lowercase.
-    imagen = models.CharField(db_column='imagen', max_length=250, blank=True, null=True)  # Field name made lowercase.
+    imagen = models.CharField(max_length=250, blank=True, null=True)
 
     class Meta:
         ordering = ['id']
@@ -393,7 +392,7 @@ class Salas(models.Model):
 
 class Salausuario(models.Model):
     idsala = models.OneToOneField(Salas, db_column='idSala', primary_key=True, on_delete=models.CASCADE)  # Field name made lowercase.
-    idusuario = models.ForeignKey('Usuarios', db_column='idUsuario', on_delete=models.CASCADE)  # Field name made lowercase.
+    idusuario = models.ForeignKey(User, on_delete=models.CASCADE, db_column='idUsuario')  # Field name made lowercase.
 
     class Meta:
         db_table = 'salausuario'
@@ -425,31 +424,6 @@ class Tipocategoria(models.Model):
     class Meta:
         ordering = ['id']
         db_table = 'tipocategoria'
-
-
-class Tipomensaje(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    tipo = models.CharField(max_length=45, blank=True, null=True)
-
-    class Meta:
-        ordering = ['id']
-        db_table = 'tipomensaje'
-
-
-class Usuarios(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    usuario = models.CharField(max_length=45)
-    contrasena = models.CharField(max_length=50)
-    tipousuario = models.IntegerField(db_column='tipoUsuario', default=0 )  # Field name made lowercase.
-    idclientes = models.ForeignKey(Clientes, db_column='idClientes', blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
-
-    def __str__(self):
-        return "( " + str(self.id) + " ) - " + self.usuario
-
-    class Meta:
-        ordering = ['id']
-        db_table = 'usuarios'
-
 
 
 class Valoraciones(models.Model):

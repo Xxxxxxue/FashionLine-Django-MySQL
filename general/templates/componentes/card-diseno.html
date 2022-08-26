@@ -4,7 +4,7 @@
         <div class="row">
             {%for p in productos%}
             <div class="col-lg-3 col-md-6 mb-4">
-              <div class="card">
+              <div class="card" style="width: 18rem;">
                 <a href=""><i class="bi bi-suit-heart card-like" aria-hidden="true"></i></a>
                 <a class="producto-card-link" href="/disign_detail/{{p.id}}">
                     {%for i in imagenes%}
@@ -23,6 +23,7 @@
                   {%endif%}
                 </div>
             </div>
-            {%endfor%}
+        </div>
+        {%endfor%}
     </div>
   </div>
