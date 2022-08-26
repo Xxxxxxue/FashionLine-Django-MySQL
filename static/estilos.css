@@ -293,12 +293,23 @@
 }
 .estrella { 
     color:grey;
-    font-size: 30px;
+    margin-top: 2px;
+    font-size: 40px;
+    width: auto;
+    margin-left: 1rem;
+}
+.estrell {
+    color:grey;
+    margin-top: 2px;
+    font-size: 40px;
+    width: auto;
+    margin-left: 1rem;
 }
 .estrella:hover {
     color:orange;
     cursor: pointer;
 }
+
 .input-estrella[type = "radio"]{ 
     display:none;
 }
@@ -310,12 +321,6 @@
     float: left;
     direction: rtl;/* right to left */
     unicode-bidi: bidi-override;/* bidi de bidireccional */
-}
-.estrella {
-    margin-top: 2px;
-    font-size: 40px;
-    width: auto;
-    margin-left: 1rem;
 }
 .valoracion-media {
     margin-left: 2%;
@@ -481,3 +486,4 @@ ul.pagination li a:hover{
     display:block;
     margin-top: 5px;
 }
+/*colores y tallas seleccionados */
