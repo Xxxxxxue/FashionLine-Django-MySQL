@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{%load static%}
+
+{%block title%}Change Password | Fashion Line{%endblock%}
+
+{% block main %}
+
+    <!--CHANGE KEY-->
+    <div class="container mt-5">
+        <h1 class="text-center mb-5">CAMBIAR CONTRASEÑA</h1>
+        <form class="loginform" action="/user/changeKey" method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="Password1" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="Password1" name="Password1" oninput="register();return false">
+                <span id="span1" style="color: red;"></span>
+            </div>
+            <div class="mb-3">
+                <label for="Password2" class="form-label">Repite Contraseña</label>
+                <input type="password" class="form-control" id="Password2" name="Password2" oninput="register();return false">
+            </div>
+            <button type="submit" class="btn btn-success">Guardar</button>
+        </form>
+    </div>
+
+{% endblock %}
+

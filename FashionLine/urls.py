@@ -1,11 +1,14 @@
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from general import views
 from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    # user
+    path('user/', include('gestion_user.urls')),
 
     # general page
     path('', views.home, name='home'),
@@ -34,17 +37,6 @@ urlpatterns = [
     path('search/<int:page>', views.search),
     path('cart/', views.cesta),
 
-    # # user
-    path('user/profile/<int:id>', views.perfil),
-    path('user/changeKey', views.changeKey),
-    path('user/orders', views.pedidos),
-    path('user/orders_detail/<int:id>', views.pedidos_detalle),
-
-    path('user/mydisign/<int:page>', views.misdisenos),
-
-    path('user/myproduct/<int:page>', views.misproductos),
-
-    path('user/favorites/<int:page>', views.favoritos),
 
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -1,21 +1,23 @@
+{% load mytags %}
+
 <!--paginacion-->
 <div class="container my-4 text-center">
     <ul class="pagination">
 
         {% if productos.has_previous %}
-        <li><a href='/{{paginacion_url}}/{%if sexo%}{{sexo}}/{%endif%}{{productos.previous_page_number}}'>«</a></li>
+        <li><a href='/{{paginacion_url}}/{%if sexo%}{{sexo|change:"ñ"|change:" "}}/{%endif%}{{productos.previous_page_number}}'>«</a></li>
         {% endif %}
 
         {% for page in pagelist %}
         {% if num == page %}
-        <li><a href='/{{paginacion_url}}/{%if sexo%}{{sexo}}/{%endif%}{{page}}' class="pag-active">{{page}}</a></li>
+        <li><a href='/{{paginacion_url}}/{%if sexo%}{{sexo|change:"ñ"|change:" "}}/{%endif%}{{page}}' class="pag-active">{{page}}</a></li>
         {% else %}
-        <li><a href='/{{paginacion_url}}/{%if sexo%}{{sexo}}/{%endif%}{{page}}'>{{page}}</a></li>
+        <li><a href='/{{paginacion_url}}/{%if sexo%}{{sexo|change:"ñ"|change:" "}}/{%endif%}{{page}}'>{{page}}</a></li>
         {%endif%}
         {% endfor %}
 
         {% if productos.has_next %}
-        <li><a href='/{{paginacion_url}}/{%if sexo%}{{sexo}}/{%endif%}{{productos.next_page_number}}'>»</a></li>
+        <li><a href='/{{paginacion_url}}/{%if sexo%}{{sexo|change:"ñ"|change:" "}}/{%endif%}{{productos.next_page_number}}'>»</a></li>
         {% endif %}
 
     </ul>

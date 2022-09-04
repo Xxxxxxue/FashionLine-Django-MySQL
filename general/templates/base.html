@@ -9,9 +9,12 @@
 
 <body class="cuerpo" {%block capa%}{%endblock%}>
     <!--{% block navigation %}{% endblock %}-->
+    {%include "componentes/navigation.html"%}
+
     <!--CUERPO-->
     {% block main %}{% endblock %}
 
     <!--{% block footer %}{% endblock %}-->
+    {%include "componentes/footer.html" %}
 </body>
 </html>

@@ -1,0 +1,45 @@
+<!-- Modal -->
+<div class="modal fade" id="modal-slider-del" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+     aria-hidden="true" >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Imagenes</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body m-1">
+
+                    <table class="table text-center mt-1">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">imagen</th>
+                                <th scope="col">Delete</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {%for s in img%}
+                            <tr>
+                                <th scope="row">{{s.id}}</th>
+                                <td><a href="/user/img/{{s.id}}">{{s.imagen}}</a></td>
+
+                                <td>
+                                    <a href="/user/slider/delete/{{s.id}}" style="color:black"><i
+                                            class="bi bi-eraser-fill"></i></a>
+                                </td>
+                            </tr>
+                            {%endfor%}
+
+                            </tbody>
+                        </table>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'general.apps.GeneralConfig',
+    'gestion_user.apps.GestionUserConfig',
 ]
 
 MIDDLEWARE = [
@@ -57,9 +58,10 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'templates'),
-            os.path.join(BASE_DIR, 'templates/componentes'),
-            os.path.join(BASE_DIR, 'templates/paginas'),
+            os.path.join(BASE_DIR, '../general/templates'),
+            os.path.join(BASE_DIR, '../general/templates/componentes'),
+            os.path.join(BASE_DIR, '../general/templates/paginas'),
+            os.path.join(BASE_DIR, '../gestion_user/templates'),
 
         ],
         'APP_DIRS': True,
@@ -133,8 +135,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static/plugin/bootstrap-5.2.0-beta1-dist'),
 ]
 
-MEDIA_URL = 'media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/imagenes')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

@@ -97,26 +97,36 @@
                             <a class="dropdown-item" href="/contact/1">Ver todo</a>
                         </div>
                     </li>
+
+                    {%if user.is_authenticated%}
                     <!--MENSAJERIA-->
                     <li class="nav-item mx-1">
                         <a class="nav-link" href="/message/1">Mensajeria</a>
                     </li>
+
                     <!--USUARIO EN PANTALLA CHICA-->
                     <li class="nav-item dropdown mx-1 d-lg-none d-block">
                         <a class="d-lg-none nav-link dropdown-toggle" href="#" id="navbarDropdown3" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            nombre
+                            {{cliente.nombre}}  {{cliente.apellidos}}
                         </a>
                         <div class="dropdown-menu min-width:100px" aria-labelledby="navbarDropdown3">
-                            <a class="dropdown-item" href="/user/profile/1">Perfil</a>
+                            <a class="dropdown-item" href="/user/profile/{{user.id}}">Perfil</a>
                             <a class="dropdown-item" href="/user/changeKey">Cambiar Contraseña</a>
                             <a class="dropdown-item" href="/user/orders">Mis pedidos</a>
-                            <a class="dropdown-item" href="/user/myproduct/1">Mis productos</a>
-                            <a class="dropdown-item" href="/user/mydisign/1">Mis diseños</a>
-                            <a class="dropdown-item" href="/user/favorites/1">Mis favoritos</a>
+                            <a class="dropdown-item" href="/user/myproduct/mujer/1">Mis productos</a>
+                            <a class="dropdown-item" href="/user/mydisign/mujer/1">
+                                {%if grupo == 'diseñador' or grupo == 'ambos'%}
+                                    Mis diseños
+                                {%else%}
+                                    Soy diseñador
+                                {%endif%}
+                            </a>
+                            <a class="dropdown-item" href="/user/favorites/mujer/1">Mis favoritos</a>
                             <a class="dropdown-item" href="/logout">Salir</a>
                         </div>
                     </li>
+                    {%endif%}
                 </ul>
                 <!--search-->
                 <form class="form-inline my-2 my-lg-0">
@@ -128,18 +138,27 @@
                 <a href="/cart"><img class="d-lg-block d-none carrito-icon"
                                 src="{% static 'imagenes/shopping_icon.svg'%}"></a>
                 <!--login-->
-                <a href="/login" onmouseover="BlockUserNav()" onmouseout="NoneUserNav()"><img
-                        class="d-lg-block d-none usericon" src="{% static '/imagenes/user_icon.svg'%}"></a>
+                <a title="iniciar sesion" {%if user.is_authenticated%} href="#" onmouseover="BlockUserNav()" onmouseout="NoneUserNav()" {%else%} href="/login" {%endif%}>
+                    <img class="d-lg-block d-none usericon" src="{% static '/imagenes/user_icon.svg'%}" alt="iniciar sesion" >
+                </a>
                 <div class="user-drop" id="navUser">
-                    <a class="link-usernav mt-2" href="/user/profile/1">Perfil</a>
+                    <a class="link-usernav mt-2" href="/user/profile/{{user.id}}">Perfil</a>
                     <a class="link-usernav mt-2" href="/user/changeKey">Cambiar Contraseña</a>
                     <a class="link-usernav mt-2" href="/user/orders">Mis pedidos</a>
-                    <a class="link-usernav mt-2" href="/user/myproduct/1">Mis productos</a>
-                    <a class="link-usernav mt-2" href="/user/mydisign/1">Mis diseños</a>
-                    <a class="link-usernav mt-2" href="/user/favorites/1">Mis favoritos</a>
+                    <a class="link-usernav mt-2" href="/user/myproduct/mujer/1">Mis productos</a>
+                    <a class="link-usernav mt-2" href="/user/mydisign/mujer/1">
+                         {%if grupo == 'diseñador' or grupo == 'ambos'%}
+                            Mis diseños
+                        {%else%}
+                            Soy diseñador
+                        {%endif%}
+                    </a>
+                    <a class="link-usernav mt-2" href="/user/favorites/mujer/1">Mis favoritos</a>
                     <a class="link-usernav mt-2" href="/logout">Salir</a>
                 </div>
+                {%if not user.is_authenticated%}
                 <a class="d-lg-none loginuser" href="/login">Iniciar Sesión</a>
+                {%endif%}
             </div>
         </nav>
     </div>

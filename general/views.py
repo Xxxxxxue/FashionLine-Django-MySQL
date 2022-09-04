@@ -1,14 +1,10 @@
-import hashlib
 from django.db.models import Q
-from django.http import HttpResponseRedirect
-from django.shortcuts import render, HttpResponse, redirect
-from general import models
-from general import pagination
-from general import ObtenerValoracion
+from django.shortcuts import render, redirect
+from general import models, pagination, ObtenerValoracion
 from django.utils import timezone
 from django.contrib import auth
-from django.contrib.auth.models import User
-
+from django.contrib.auth.models import User, Group
+from django.http import HttpResponseRedirect
 
 # variables globales para navigation y filtro
 tipocad = models.Tipocategoria.objects.all()
@@ -50,6 +46,9 @@ def home(request):
     return render(request, "paginas/home.html", {'slider': slider, 'tipo': tipocad, 'categorias':categorias, 'text': text })
 
 
+
+########################################################################################################################
+
 # LOGIN
 def login(request):
     # get
@@ -87,6 +86,7 @@ def registro(request):
     # post
     username = request.POST.get('usuario')
     password = request.POST.get('password')
+    password1 = request.POST.get('password1')
     nombre = request.POST.get('nombre')
     apellido = request.POST.get('apellido')
     u = User.objects.filter(username=username)
@@ -105,9 +105,12 @@ def registro(request):
 
     # crear usuario
     user = User.objects.create_user(username=username, password=password)
-    print(user)
+    cliente = models.Clientes.objects.create(nombre=nombre, apellidos=apellido, email=username,idusuario=user)
+    print(user.id)
     # registrado, inicia sesion
     if user:
+        g = Group.objects.get(name='none')
+        user.groups.add(g)
         id = str(user.id)
         auth.login(request, user)
         return HttpResponseRedirect('/user/profile/'+id)
@@ -125,13 +128,17 @@ def salir(request):
     print(ppp)  # None
     return redirect("/")
 
+
+
 ########################################################################################################################
 
 # PRODUCTO
 def producto(request,sexo,page):
     # sacar database para el filto : variables grobales
     # color, talla, precio(no), valoracion, tipos y categorias para filtro
-
+    if (sexo == 'ninos' or sexo == 'ninas'):
+        sexo = sexo[:2] + "ñ" + sexo[3:]
+    print(sexo)
     #sacando productos
     s = sexos.get(tipo=sexo)
     psexo = models.Productosexo.objects.filter(idsexo=s)
@@ -161,7 +168,9 @@ def producto(request,sexo,page):
 def producto_filtro_tipo(request,sexo,tipo,page):
     # sacar database para el filto
     # color, talla, precio(no), valoracion, tipos y categorias
-
+    if (sexo == 'ninos' or sexo == 'ninas'):
+        sexo = sexo[:2] + "ñ" + sexo[3:]
+    print(sexo)
     # sacando productos de tipo x
     s = sexos.get(tipo=sexo)
     psexo = models.Productosexo.objects.filter(idsexo=s)
@@ -190,7 +199,9 @@ def producto_filtro_tipo(request,sexo,tipo,page):
 def producto_filtro_categoria(request,tipo,sexo,categoria,page):
     # sacar database para el filto
     # color, talla, precio(no), valoracion, tipos y categorias
-
+    if (sexo == 'ninos' or sexo == 'ninas'):
+        sexo = sexo[:2] + "ñ" + sexo[3:]
+    print(sexo)
     # sacando productos de tipo x
     s = sexos.get(tipo=sexo)
     psexo = models.Productosexo.objects.filter(idsexo=s)
@@ -260,6 +271,9 @@ def producto_detalle(request, id):
 
 
 def producto_user(request,sexo,iduser,page):
+    if (sexo == 'ninos' or sexo == 'ninas'):
+        sexo[2] = 'ñ'
+    print(sexo)
     s = sexos.get(tipo=sexo)
     psexo = models.Productosexo.objects.filter(idsexo=s)
     productos = []
@@ -294,6 +308,9 @@ def producto_user(request,sexo,iduser,page):
 # DISENO
 def diseno(request, sexo, page):
     # database filtro
+    if (sexo == 'ninos' or sexo == 'ninas'):
+        sexo = sexo[:2] + "ñ" + sexo[3:]
+    print(sexo)
 
     # sacando productos de sexo
     s = sexos.get(tipo=sexo)
@@ -322,7 +339,9 @@ def diseno(request, sexo, page):
 
 def diseno_filtro_tipo(request, sexo, page, tipo):
     # database filtro
-
+    if (sexo == 'ninos' or sexo == 'ninas'):
+        sexo = sexo[:2] + "ñ" + sexo[3:]
+    print(sexo)
     # sacando productos de sexo
     s = sexos.get(tipo=sexo)
     psexo = models.Disenosexo.objects.filter(idsexo=s)
@@ -353,6 +372,9 @@ def diseno_filtro_categoria(request, sexo, page, tipo, categoria):
     # database
     # color, talla, precio(no), valoracion, tipos y categorias
     # sacando productos de sexo
+    if (sexo == 'ninos' or sexo == 'ninas'):
+        sexo = sexo[:2] + "ñ" + sexo[3:]
+    print(sexo)
     s = sexos.get(tipo=sexo)
     psexo = models.Disenosexo.objects.filter(idsexo=s)
     productos = []
@@ -423,7 +445,9 @@ def diseno_detalle(request, id):
 
 def diseno_user(request, sexo, iduser, page):
     # database filtro
-
+    if (sexo == 'ninos' or sexo == 'ninas'):
+        sexo[2] = 'ñ'
+    print(sexo)
     # sacando productos de sexo
     s = sexos.get(tipo=sexo)
     psexo = models.Disenosexo.objects.filter(idsexo=s)
@@ -586,47 +610,4 @@ def search(request, page):
                                                    'num': datos_pagination['num'],
                                                    'paginacion_url': url})
 
-
-########################################################################################################################
-#PAGINAS USER
-
-# PERFIL
-#from django.contrib.auth.decorators import login_required @login_required
-def perfil(request, id):
-
-    return render(request, "paginas/user_perfil.html", {'color': color, 'talla': talla,
-                                                   'valoracion': valoracion, 'tipo': tipocad,
-                                                   'categorias': categorias,})
-
-# PEDIDOS
-def pedidos(request):
-    return render(request, "paginas/user_pedidos.html", {'color': color, 'talla': talla,
-                                                   'valoracion': valoracion, 'tipo': tipocad,
-                                                   'categorias': categorias,})
-
-def pedidos_detalle(request, id):
-    return render(request, "paginas/user_pedidos_detalle.html", {'color': color, 'talla': talla,
-                                                   'valoracion': valoracion, 'tipo': tipocad,
-                                                   'categorias': categorias,})
-
-# MIS DISENOS
-def misdisenos(request, page):
-    return render(request, "paginas/user_disenos.html", {'color': color, 'talla': talla,
-                                                   'valoracion': valoracion, 'tipo': tipocad,
-                                                   'categorias': categorias,})
-
-# MIS PRODUCTOS
-def misproductos(request, page):
-    return render(request, "paginas/user_productos.html", {'color': color, 'talla': talla,
-                                                   'valoracion': valoracion, 'tipo': tipocad,
-                                                   'categorias': categorias,})
-
-# MIS FAVORITOS
-def favoritos(request, page):
-    return render(request, "paginas/user_favoritos.html", {'color': color, 'talla': talla,
-                                                   'valoracion': valoracion, 'tipo': tipocad,
-                                                   'categorias': categorias,})
-
-# CAMBIAR CONTRASEÑA
-def changeKey(request):
-    return render(request, "paginas/user_cambiarKey.html", {'tipo': tipocad, 'categorias': categorias,})
+#########################################################################################################################

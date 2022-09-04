@@ -1,27 +1,25 @@
 {% extends 'base.html' %}
 {%load static%}
 
-{%block title%}Mis Productos | Fashion Line{%endblock%}
+{%block title%}Mis Diseños | Fashion Line{%endblock%}
 
 {% block main %}
-    {%include "componentes/navigation.html"%}
 
     <!--CUERPO-->
     <!--CUERPO DE PRODUCTOS-->
     <div class="container-fluid m-0 p-0">
         <!--Parte filtro Collapse-->
         {%include "componentes/filtro.html"%}
+        <button class="btn btn-info d-inline-block w-100" data-toggle="modal" data-target="#modal-diseno" onclick="disenoAdd('{{sexo}}',{{num}})">Add</button>
         {%include "componentes/sexo.html"%}
 
-        <button class="btn btn-info d-inline-block w-100" data-toggle="modal" data-target="#modal-producto">Add</button>
         <!--Cards de productos-->
-        {%include "componentes/card-producto.html"%}
-        {%include "componentes/modal-add-producto.html" %}
+        {%include "componentes/card-diseno.html"%}
+        {%include "componentes/modal-add-diseno.html" %}
         <!--paginacion-->
         {%include "componentes/paginacion.html" %}
 
     </div>
 
-    {%include "componentes/footer.html" %}
 {% endblock %}
 

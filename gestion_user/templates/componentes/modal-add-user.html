@@ -1,0 +1,65 @@
+<!-- Modal user-->
+<div class="modal fade" id="modal-user-editar" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Perfil</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body m-1">
+                <form action="{%url 'perfil-edit' user.id %}" method="post" name="edit-perfil" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    Perfil:
+                    <br>
+                    <img class="user_perfil_detalle ml-3" src="{{cliente.icon}}" alt="perfil">
+                    <input class="w-50 ml-5" type="file" name="icon">
+                    <br>
+                    Nombre:
+                    <input class="form-control" type="text" name="nombre" value="{{cliente.nombre}}">
+                    Apellidos:
+                    <input class="form-control" type="text" name="apellidos" value="{{cliente.apellidos}}">
+
+                    {%if grupo == "empresa" or grupo == "ambos"%}
+                    Empresa:
+                    <input class="form-control" type="text" name="empresa" value="{{cliente.empresa}}">
+                    CIF:
+                    <input class="form-control" type="text" name="cif" value="{{cliente.cif}}">
+                    Cuenta:
+                    <input class="form-control" type="text" name="cuenta" value="{{cliente.cuenta}}">
+                    {%endif%}
+
+                    Email:
+                    <input class="form-control" type="email" name="email" value="{{cliente.email}}" >
+                    Teléfono:
+                    <input class="form-control" type="number" name="telefono" value="{{cliente.telefono}}">
+                    Localidad:
+                    <select class="form-select" aria-label="Default select example" name="dir-select">
+                        {%if not direcciones%}
+                        <option selected>none (añade uno en la misma pagina más abajo)</option>
+                        {%endif%}
+                        {%for dir in direcciones%}
+                        {%if dir.elegido%}
+                            <option selected value="{{dir.id}}">{{dir.calle}}, {{dir.localidad}}, {{dir.pais}}, {{dir.cp}}</option>
+                        {%else%}
+                            <option value="{{dir.id}}">{{dir.calle}}, {{dir.localidad}}, {{dir.pais}}, {{dir.cp}}</option>
+                        {%endif%}
+                        {%endfor%}
+                    </select>
+                    Descripción:
+                    <textarea class="form-control" type="text" id="descripcion" name="descripcion" >{{cliente.descripcion}}</textarea>
+                    Imagenes slider: <br>
+                    <input class="w-50 text-center my-3 " type="file" name="slider" multiple>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="reiniciar()">Close</button>
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>

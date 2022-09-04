@@ -1,27 +1,28 @@
-
 <div class="container mt-4">
     <div class="row">
         {% for p in productos %}
         <div class="col-lg-3 col-md-6 mb-4">
             <a class="producto-card-link" href="/product_detail/{{p.id}}">
-                <div class="card" >
+                <div class="card">
                     {% for i in imagenes %}
-                        {% if i.idproducto == p %}
-                        <img class="card-img-top" src="{{i.idimagen.imagen}}" alt="Card image cap">
-                        {%endif%}
+                    {% if i.idproducto == p %}
+                    <img class="card-img-top" src="{{i.idimagen.imagen}}" alt="Card image cap">
+                    {%endif%}
                     {%endfor%}
                     <div class="card-body text-center">
                         <p>{{p.nombre}}</p>
                         <h5>{{p.precio}} €</h5>
                     </div>
 
-                    {%if user.is_authenticated%}
-                    <button class="boton-producto" data-toggle="modal" data-target="#modal-diseno">Edit</button>
-                    <button class="btn btn-dark">Delete</button>
-                    {%endif%}
-
                 </div>
             </a>
+            {%if user.is_authenticated and paginacion_url == 'user/myproduct'%}
+                <button class="boton-producto" data-toggle="modal" data-target="#modal-producto"
+                onclick="productEdit({{p.id}},'{{p.nombre}}','{{p.descripcion}}','{{p.referencia}}','{{p.precio}}',
+                '{{p.coste}}','{{p.oferta}}','{{p.precioactual}}','{{p.idiva.iva}}','{{p.cantidad}}','{{sexo}}',{{page}})"
+                >Edit</button>
+                <a href="/user/myproduct/delete/{{sexo}}/{{page}}/{{p.id}}" class="btn btn-dark w-100">Delete</a>
+            {%endif%}
         </div>
         {%endfor%}
     </div>

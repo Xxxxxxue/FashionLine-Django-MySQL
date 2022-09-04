@@ -4,13 +4,12 @@
 {%block title%}Login | Fashion Line{%endblock%}
 
 {% block main %}
-    {%include "componentes/navigation.html"%}
 
     <!--CUERPO-->
     <!--LOGIN-->
     <div class="container mt-5">
         <h1 class="text-center mb-5">INICIAR SESIÓN</h1>
-        <form class="loginform" action="{%url 'login' %}" method="post" onsubmit="login()">
+        <form class="loginform" action="{%url 'login' %}" method="post">
             {% csrf_token %}
             <div class="mb-3">
                 <label for="Email" class="form-label">Usuario</label>
@@ -29,7 +28,6 @@
         </form>
     </div>
 
-    {%include "componentes/footer.html" %}
 {% endblock %}
 
 

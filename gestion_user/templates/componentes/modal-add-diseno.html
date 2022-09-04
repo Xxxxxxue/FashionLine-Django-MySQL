@@ -1,0 +1,59 @@
+<!-- Modal diseign-->
+<div class="modal fade" id="modal-diseno" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Diseño</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body m-1">
+                <form action="" method="post" id="edit-diseno" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    Imagenes: <br>
+                    <input class="w-50 text-center my-3" type="file" name="images" multiple>
+                    <br>
+                    Nombre:
+                    <input class="form-control" type="text" id="nombre" name="nombre">
+                    Precio:
+                    <input class="form-control" type="number" name="precio" id="precio"  placeholder="0.00" step="0.01"  required>
+                    Descripción:
+                    <textarea class="form-control" type="text" id="descripcion" name="descripcion"></textarea>
+
+                    Sexo:
+                    <select class="w-100 " name="sexo" id="sex">
+                        {%for x in sexos%}
+                        <option value="{{x.tipo}}">{{x.tipo}}</option>
+                        {%endfor%}
+                    </select>
+                    Categorias:
+                    <select class="w-100 " name="categoria" id="categorias">
+                        {%for ca in categorias%}
+                        <option value="{{ca.categoria}}">{{ca.categoria}}</option>
+                        {%endfor%}
+                    </select>
+
+                    Colores:
+                    <select class="w-100 " name="color" id="colores" multiple="multiple">
+                        {%for c in color%}
+                        <option value="{{c.color}}" style="background-color: {{c.color}}">{{c.nombre}}</option>
+                        {%endfor%}
+                    </select>
+                    Tallas:
+                    <select class="w-100 " name="talla" id="tallas" multiple="multiple">
+                        {%for t in talla%}
+                        <option value="{{t.talla}}">{{t.talla}}</option>
+                        {%endfor%}
+                    </select>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>

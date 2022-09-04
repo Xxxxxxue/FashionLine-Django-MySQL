@@ -1,9 +1,10 @@
+{% load mytags %}
 <!--SEXO-->
 <div class="container mt-3">
     <div class="row">
         {%for s in sexos%}
         <div class="col">
-            <a href="/{{paginacion_url}}/{{s.tipo}}/1">
+            <a href='/{{paginacion_url}}/{{s.tipo|change:"ñ"|change:" "}}/1'>
                 <button class="boton-producto">{{s.tipo}}</button>
             </a>
         </div>

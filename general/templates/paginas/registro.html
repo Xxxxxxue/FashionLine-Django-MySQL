@@ -4,13 +4,12 @@
 {%block title%}Registrar | Fashion Line{%endblock%}
 
 {% block main %}
-    {%include "componentes/navigation.html"%}
 
     <!--CUERPO-->
     <!--Registar-->
     <div class="container mt-5">
         <h1 class="text-center mb-5">Nuevo Cliente</h1>
-        <form class="loginform" action="{%url 'registro' %}" method="post" onsubmit="register();">
+        <form class="loginform" action="{%url 'registro' %}" method="post" >
             {% csrf_token %}
             <div class="mb-3">
                 <label for="Email" class="form-label">Usuario</label>
@@ -19,12 +18,12 @@
             </div>
             <div class="mb-3">
                 <label for="Password1" class="form-label">Contraseña</label>
-                <input type="password" class="form-control" id="Password1" name="password" required="required">
+                <input type="password" class="form-control" id="Password1" name="password" required="required" oninput="register();return false">
                 <span id="span1" style="color: red;"></span>
             </div>
             <div class="mb-3">
                 <label for="Password2" class="form-label">Repetir Contraseña</label>
-                <input type="password" class="form-control" id="Password2" name="password1" required="required">
+                <input type="password" class="form-control" id="Password2" name="password1" required="required" oninput="register();return false">
             </div>
             <!--datos-->
             <div class="mb-3">
@@ -39,10 +38,9 @@
                 <input type="checkbox" class="form-check-input" id="Check" name="check" required="required">
                 <label class="form-check-label" for="Check">He leído y entendido la Privacy Notice</label>
             </div>
-            <button type="submit" class="btn btn-primary">Crear Cuenta</button>
+            <button type="submit" class="btn btn-primary" >Crear Cuenta</button>
         </form>
     </div>
 
-    {%include "componentes/footer.html" %}
 {% endblock %}
 

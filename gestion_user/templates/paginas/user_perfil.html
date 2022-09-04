@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{%load static%}
+
+{%block title%}Profile | Fashion Line{%endblock%}
+
+{% block main %}
+
+<!--CUERPO PERFIL-->
+<div class="container-fluid m-0 p-0">
+    <div class="container mt-4">
+        <div class="agenda-div">
+
+            <div class="row">
+                <div class="col-3 hr-vertical text-center">
+                    <img class="user_perfil_detalle" src="{{cliente.icon}}" alt="perfil">
+                    <p>{{cliente.nombre|capfirst}}</p>
+                    <span data-bs-toggle="modal" data-bs-target="#modal-user-editar"><button
+                            class="boton-producto mt-4 mx-1">Editar</button></span>
+                </div>
+                <div class="col-9 px-5 py-3">
+                    {%if grupo == "empresa" or grupo == "ambos"%}
+                    <h3>{{cliente.empresa|capfirst}}</h3>
+                    {%else%}
+                    <h3>{{cliente.nombre|capfirst}} {{cliente.apellidos|capfirst}}</h3>
+                    {%endif%}
+
+                    <hr>
+                    <div class="row">
+                        <div class="col">
+                            <p>Email: {{cliente.email}}</p>
+                            <p>Teléfono: {{cliente.telefono}}</p>
+                        </div>
+                        <div class="col">
+                            {%if localidad%}
+                            <p>Localidad: {{localidad.calle|capfirst}}, {{localidad.localidad|capfirst}} -
+                                {{localidad.provincia|capfirst}}, {{localidad.pais|capfirst}}</p>
+                            {%endif%}
+                            <p>Categoria:
+                                {%for c in cliente.getCategoria%}
+                                {{c.categoria|capfirst}}&nbsp;
+                                {%endfor%}
+                            </p>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <!--slider con fotos-->
+                    {%include 'componentes/slider.html' with slider=cliente.getImagen%}
+                    <div class="row my-2 mx-1">
+                        <button class="btn btn-dark d-inline-block text-center" data-bs-toggle="modal"
+                                    data-bs-target="#modal-slider-del" >
+                                Delete
+                        </button>
+                    </div>
+
+                    <hr>
+                    <div class="row mt-2">
+                        <h3>Descripción</h3>
+                        <p>{{cliente.descripcion}}</p>
+                    </div>
+                    <hr>
+                    <div class="row my-2">
+                        <h3>Dirección</h3>
+                        <button class="btn btn-primary d-inline-block text-center" data-bs-toggle="modal"
+                                data-bs-target="#modal-user-dir" onclick="diradd()">
+                            Add
+                        </button>
+
+                        <!--tabla-->
+                        <table class="table text-center mt-5">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Dirección</th>
+                                <th scope="col">País</th>
+                                <th scope="col">CP</th>
+                                <th scope="col">Edit</th>
+                                <th scope="col">Delete</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {%for dir in direcciones%}
+                            <tr>
+                                <th scope="row">{{dir.id}}</th>
+                                <td>{{dir.calle|capfirst}}, {{dir.localidad|capfirst}}</td>
+                                <td>{{dir.pais|capfirst}}</td>
+                                <td>{{dir.cp}}</td>
+                                <td data-bs-toggle="modal" data-bs-target="#modal-user-dir"
+                                    onclick="dirEdit({{dir.id}},'{{dir.calle}}','{{dir.localidad}}','{{dir.provincia}}','{{dir.pais}}',{{dir.cp}},'{{dir.elegido}}')">
+                                    <i class="bi bi-pencil-square"></i>
+                                </td>
+                                <td>
+                                    <a href="/user/profile/direccion/delete/{{dir.id}}" style="color:black"><i
+                                            class="bi bi-eraser-fill"></i></a>
+                                </td>
+                            </tr>
+                            {%endfor%}
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{%include "componentes/modal-add-user.html" %}
+{%include "componentes/modal-add-direccion.html" %}
+{%include "componentes/modal_del_imgs.html" with img=cliente.getImagen %}
+
+{% endblock %}
+

@@ -1,6 +1,6 @@
 <!-- Modal direccion-->
 <div class="modal fade" id="modal-user-dir" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
-     aria-hidden="true">
+     aria-hidden="true" >
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -9,15 +9,20 @@
                 </button>
             </div>
             <div class="modal-body m-1">
-                <form action="">
+                <form action="" method="post" id="edit-dir">
+                    {% csrf_token %}
                     Calle:
-                    <input class="form-control" type="text" id="dir">
+                    <input class="form-control" type="text" name="calle" id="calle">
+                    Localidad:
+                    <input class="form-control" type="text" name="localidad" id="localidad">
                     Provincia:
-                    <input class="form-control" type="text" id="Provincia">
+                    <input class="form-control" type="text" name="provincia" id="provincia">
                     Pais:
-                    <input class="form-control" type="text" id="Pais">
+                    <input class="form-control" type="text" name="pais" id="pais">
                     CP:
-                    <input class="form-control" type="number" id="cp">
+                    <input class="form-control" type="number" name="cp" id="cp">
+                    Marca como dirección principal:
+                    <input class="ml-3 mt-2 mb-2" type="checkbox" name="elegido" id="elegido" onclick="checkdir()">
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
