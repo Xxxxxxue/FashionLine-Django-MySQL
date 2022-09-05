@@ -7,55 +7,7 @@
 {% block main %}
 
     <!--CUERPO DE PEDIDOS-->
-    <div class="container-fluid">
-        <div class="row my-4">
-            <div class="col-lg-7 col-md">
-                <!--tabla-->
-                <div class="tabla-compra m-3 p-3">
-                    <h3>Detalle Del Pedido</h3>
-                    <table class="table mt-3">
-                        <thead class="text-center">
-                        <tr>
-                            <th scope="col">Item</th>
-                            <th scope="col">Color / Talla</th>
-                            <th scope="col">Precio</th>
-                            <th scope="col">Cantidad</th>
-                            <th scope="col">Total</th>
-                        </tr>
-                        </thead>
-                        <tbody class="table-body">
-                        <tr>
-                            <th scope="row">
-                                <div>
-                                    <a href=""><img class="img-cesta" src="img_01.webp" alt="" srcset=""></a>
-                                </div>
-                            </th>
-                            <td class="modal-tabla">
-                                <span><button class="boton-color"></button>/ M</span>
-                            </td>
-                            <td>11.99 €</td>
-                            <td>1</td>
-                            <td>11.99 €</td>
-                        </tr>
-
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="col-lg-5 col-md">
-                <div class="tabla-compra  m-3 p-3">
-                    <h3>Resumen Del Pedido</h3>
-                    <h5 class="mt-3">Estado: pendiente</h5>
-                    <span>
-                        <p class="mt-4 d-inline-block mx-3">SubTotal:</p>
-                        <h1 class="mt-4 d-inline-block ">11.99 €</h1>
-                    </span>
-
-                </div>
-            </div>
-        </div>
-    </div>
+    {%include "componentes/cesta_detail.html" %}
 
 
 {% endblock %}

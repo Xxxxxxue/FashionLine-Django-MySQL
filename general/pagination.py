@@ -4,10 +4,11 @@ import math
 def pagination(productos, page):
     # Paginacion  datos, num:cuantos quiere poner en una pagina
     pager = Paginator(productos, 1)
+    # print(pager)
     # num es pagina actual, recogido informacion de parametros
     num = int(page)
     page_productos = pager.page(num)
-
+    # print(page_productos)
     # pagina inicial
     begin = (num - int(math.ceil(10.0 / 2)))
     if begin < 1:

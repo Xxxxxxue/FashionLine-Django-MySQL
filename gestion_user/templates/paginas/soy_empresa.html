@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{%load static%}
+
+{%block title%}Registrar | Fashion Line{%endblock%}
+
+{% block main %}
+
+    <!--CUERPO-->
+    <!--Empresa-->
+    <div class="container mt-5">
+        <h1 class="text-center mb-5">Nueva Empresa</h1>
+        <form class="loginform" action=" /user/empresa " method="post" >
+            {% csrf_token %}
+            Empresa:
+            <input class="form-control" type="text" name="empresa" required>
+            CIF:
+            <input class="form-control" type="text" name="cif" required>
+            Cuenta:
+            <input class="form-control" type="text" name="cuenta" required>
+            Categorias:
+            <select class="form-select" aria-label="Default select example" name="categoria" multiple>
+                <option value="empresas de venta mayor">empresas de venta mayor</option>
+                <option value="talleres">talleres</option>
+                <option value="importadores">importadores</option>
+
+            </select>
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="Check" name="check" required="required">
+                <label class="form-check-label" for="Check">He leído y entendido la Privacy Notice</label>
+            </div>
+            <button type="submit" class="btn btn-primary" >Guardar</button>
+        </form>
+    </div>
+
+{% endblock %}
+

@@ -11,34 +11,31 @@
             <div class="row w-75 m-auto py-3">
 
                 <!--fila de mensaje-->
+                {%for m in msgs%}
                 <div class="container mt-4">
                     <div class="card .agenda-card mb-4">
                         <div class="row">
-                            <div class="col-2 text-center my-2 mx-2  hr-vertical">
-                                <img class="user_perfil" src="/static/user_icon.svg" alt="perfil">
+                            <div class="col-2 text-center my-2 m-2  hr-vertical">
+                                <img class="user_perfil" src="{{m.getCliente.icon}}" alt="perfil">
                             </div>
                             <div class="col-8 pt-3 pl-3">
-                                <h5>Nombre</h5>
-                                <div class="embed-responsive embed-responsive-16by9">
-                                    <iframe class="embed-responsive-item iframe-producto" src="8.productoDetalle.html"
-                                            allowfullscreen></iframe>
-                                </div>
-                                <p>Queria hacer pregunta sobre este producto</p>
+                                <h5>{{m.getCliente.nombre}} {{m.getCliente.apellidos}} .... {{m.getCliente.empresa}}</h5>
+                                <p>{{m.mensaje}}</p>
                             </div>
-                            <p class="chat-tiempo">tiempo</p>
+                            <p class="chat-tiempo">{{m.fecha}}</p>
                         </div>
                     </div>
                 </div>
-
+                {%endfor%}
                 <!--box donde escribe mensaje-->
                 <br>
                 <hr>
                 <br>
                 <div class="row mt-3 pr-0">
-                    <form action="" class="">
+                    <form action="/message_submit/{{misala.id}}" method="post">
+                    {% csrf_token %}
                         <textarea class="form-control manda-mensaje" name="mensaje" id="mensaje"></textarea>
-                        <button class="boton-producto w-25 my-1">Enviar</button>
-                        <a class="archivo-mensaje ml-1" href="">Subir archivo</a>
+                        <button class="boton-producto w-25 my-1" type="submit">Enviar</button>
                     </form>
                 </div>
             </div>

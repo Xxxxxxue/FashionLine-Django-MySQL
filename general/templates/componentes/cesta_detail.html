@@ -1,0 +1,64 @@
+<div class="container-fluid m-0 p-0">
+    <!--CUERPO DE CESTA-->
+    <div class="container-fluid">
+        <div class="row my-4">
+            <div class="col-lg-7 col-md">
+                <!--tabla-->
+                <div class="tabla-compra m-3 p-3">
+                    <h3>Sumario Del Artículo ({{count}})</h3>
+                    <table class="table mt-3">
+                        <thead class="text-center">
+                        <tr>
+                            <th scope="col">Item</th>
+                            <th scope="col">Color / Talla</th>
+                            <th scope="col">Precio</th>
+                            <th scope="col">Cantidad</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Delete</th>
+                        </tr>
+                        </thead>
+                        <tbody class="table-body">
+                        {%for c in cesta.getLinea%}
+                        <form action="/user/orders/delete/{{c.id}}" method="post">
+                            {% csrf_token %}
+                        <tr>
+                            <th scope="row">
+                                <div>
+                                    <a href="/product_detail/{{c.idproducto.id}}"><img alt="img" class="img-cesta" src="{{c.idproducto.getImagenFirst}}" srcset=""></a>
+                                </div>
+                            </th>
+                            <td class="modal-tabla">
+                                <span ><input type="button" class="boton-color" style="background-color: {{c.color}}"> / {{c.talla|capfirst}}</span>
+                            </td>
+                            <td>{{c.preciounitario}} €</td>
+                            <td>
+                                <div>
+                                    <span>{{c.cantidad}}</span>
+                                </div>
+                            </td>
+                            <td>{{c.total}} €</td>
+                            <td><button type="submit" class="btn btn-success">Delete</button></td>
+                        </t1r>
+                        </form>
+                        {%endfor%}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-lg-5 col-md">
+                <div class="tabla-compra  m-3 p-3">
+                    <h3>Resumen Del Pedido</h3>
+                    <span>
+                        <p class="mt-4 d-inline-block mx-3">SubTotal:</p>
+                        <h1 class="mt-4 d-inline-block ">{{cesta.getLineaTotal}} €</h1>
+                    </span>
+                    {%if 'cart' in request.path%}
+                        <button class="btn btn-success w-100 my-3">PAGAR</button>
+                    {%endif%}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>

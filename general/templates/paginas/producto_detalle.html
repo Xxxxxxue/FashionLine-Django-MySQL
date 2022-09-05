@@ -18,36 +18,46 @@
                 <h3>{{producto.nombre|capfirst}}</h3>
                 <br>
                 <h5>Precio: {{producto.precio}} €</h5>
-                {%if producto.oferta%}
+                {%if producto.oferta != 0%}
                 <h3>Precio actual: {{producto.precioactual}} €</h3>
                 {%endif%}
-                <div class="mt-5">
-                    <h5>Color:</h5>
-                    <div>
-                        {%for c in producto.getColor%}
-                        <span><button class="boton-color" id="{{c.id}}" style="background-color: {{c.color}}"></button> </span>
-                        {%endfor%}
+
+                <form action="/cart/compra/{{producto.id}} " method="post" >
+                    {% csrf_token %}
+                    <div class="mt-5">
+                        <h5>Color:</h5>
+                        <div>
+                            {%for c in producto.getColor%}
+                            <span><input type="button" class="boton-color" id="color{{forloop.counter0}}" style="background-color: {{c.color}}"
+                            onclick="coloron({{forloop.counter0}},{{totalcolor}},'{{c.color}}')"></span>
+                            {%endfor%}
+                            <input type="text"  name="cl" id="cl" hidden>
+                        </div>
                     </div>
-                </div>
-                <div class="mt-5">
-                    <h5>Tamaño:</h5>
-                    <div>
-                       {%for t in producto.getTalla%}
-                        <span><button class="boton-talla" id="{{t.id}}">{{t.talla}}</button></span>
-                        {%endfor%}
+                    <div class="mt-5">
+                        <h5>Tamaño:</h5>
+                        <div>
+                           {%for t in producto.getTalla%}
+                            <span><input type="button" class="boton-talla" id="talla{{forloop.counter0}}"
+                            onclick="tallaon({{forloop.counter0}},{{total}},'{{t.talla}}')" value={{t.talla}}></span>
+                            {%endfor%}
+                            <input  type="text"  name="tl" id="tl"  hidden>
+                        </div>
                     </div>
-                </div>
-                <div class="mt-5">
-                    <h5>Cantidad</h5>
-                    <div>
-                        <button class="btn btn-success num-minu"> -</button>
-                        <input class="cantidad" type="number" min="0" name="cantidad" id="cantidad" value="1">
-                        <button class="btn btn-success num-add"> +</button>
+                    <div class="mt-5">
+                        <h5>Cantidad</h5>
+                        <div>
+                            <input type="button" class="btn btn-success num-minu" onclick="restar()" value="-">
+                            <input class="cantidad" type="number" min="0" name="cantidad" id="cantidad" value="1">
+                            <input type="button" class="btn btn-success num-add" onclick="sumar()" value="+">
+                        </div>
                     </div>
-                </div>
-                <a href="/cart"><button class="boton-producto mt-5">Añadir a la cesta</button></a>
+                    <a href="/cart/{{idcesta.id}}"><button type="submit" class="boton-producto mt-5">Añadir a la cesta</button></a>
+                </form>
+
+
                 <p class="mt-5 text-danger">¿Necesitas más ayuda?</p>
-                <a href="/message_chat/1"><button class="boton-producto">Contactarnos</button></a>
+                <a href="/message_chat/{{producto.idusuario.id}}/{{misala.idsala.id}}"><button class="boton-producto">Contactarnos</button></a>
             </div>
         </div>
 

@@ -35,13 +35,20 @@
                 </div>
                 <div class="text-center">
                     <p class="mt-5 text-danger">¿Te gusta el diseño? Pincha LIKE!</p>
-                    <a href="">
+                    {%if user.is_authenticated and  g.gusta == 1%}
+                    <a href="/user/favorites/delete/mujer/{{producto.id}}">
+                        <i class="bi bi-suit-heart-fill dis-like" aria-hidden="true"></i>
+                    </a>
+                    {%else%}
+                    <a href="/user/megusta/{{producto.id}}">
                         <i class="bi bi-suit-heart dis-like" aria-hidden="true"></i>
                     </a>
+                    {%endif%}
+
                 </div>
 
                 <p class="mt-5 text-danger">¿Necesitas más información? Habla con diseñador/a!</p>
-                <a href="/message_chat/1"><button class="boton-producto">Contactarnos</button></a>
+                <a href="/message_chat/{{producto.idusuario.id}}/{{misala.idsala.id}}"><button class="boton-producto">Contactarnos</button></a>
             </div>
         </div>
 

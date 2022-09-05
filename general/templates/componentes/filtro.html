@@ -16,7 +16,7 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                         {%for c in color%}
-                        <p><input class="mx-2" type="checkbox" name="{{c.color|capfirst}}">{{c.color|capfirst}}</p>
+                        <p><input class="mx-2" type="checkbox" name="{{c.color|capfirst}}">{{c.nombre|capfirst}}</p>
                         {% endfor %}
                     </div>
                 </div>

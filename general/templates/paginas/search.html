@@ -12,16 +12,14 @@
         {%include "componentes/filtro.html"%}
         <!--Cards de productos, disenos, agendas-->
         <h3 class="mt-2 ml-5">Productos</h3>
-        {%include "componentes/card-producto.html"%}
+        {%include "componentes/card-producto.html" with imagenes=pimg%}
         <hr>
         <h3 class="mt-2 ml-5">Diseños</h3>
-        {%include "componentes/card-diseno.html"%}
-        <hr>
-        <h3 class="my-2 ml-5">Agenda de Contacto</h3>
-        {%include "componentes/card-agenda.html"%}
+        {%include "componentes/card-diseno.html" with productos=disenos  imagenes=dimg%}
+
 
         <!--paginacion-->
-        {%include "componentes/paginacion.html" %}
+        {%include "componentes/paginacion.html"  with productos=disenos %}
 
     </div>
 

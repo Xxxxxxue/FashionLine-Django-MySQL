@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.contrib import auth
 from django.contrib.auth.models import User, Group
 from django.http import HttpResponseRedirect
+from django.core.exceptions import ObjectDoesNotExist
 
 # variables globales para navigation y filtro
 tipocad = models.Tipocategoria.objects.all()
@@ -13,7 +14,7 @@ color = models.Colores.objects.all()
 talla =  models.Tallas.objects.all()
 valoracion = models.Valoraciones.objects.all()
 sexos = models.Sexos.objects.all()
-
+ependiente= models.Estados.objects.filter(estado='pendiente').get()
 
 # PAGINAS PRINCIPALES
 ########################################################################################################################
@@ -42,8 +43,15 @@ def home(request):
 
     print(slider)
     # print(promo[0].ffin, fecha)
+    idcesta = []
+    grupo = []
+    if request.user.username:
+        idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
+        grupo = request.user.groups.first()
+        grupo = grupo.name
 
-    return render(request, "paginas/home.html", {'slider': slider, 'tipo': tipocad, 'categorias':categorias, 'text': text })
+
+    return render(request, "paginas/home.html", {'slider': slider, 'tipo': tipocad, 'categorias':categorias, 'text': text, 'idcesta': idcesta,'grupo':grupo })
 
 
 
@@ -111,6 +119,7 @@ def registro(request):
     if user:
         g = Group.objects.get(name='none')
         user.groups.add(g)
+        models.Cestas.objects.create(idusuario=user,idestado=ependiente)
         id = str(user.id)
         auth.login(request, user)
         return HttpResponseRedirect('/user/profile/'+id)
@@ -159,7 +168,14 @@ def producto(request,sexo,page):
     datos_pagination = pagination.pagination(productos, page)
     url = 'product'
 
-    return render(request, "paginas/producto.html", {'color': color, 'talla': talla, 'sexos': sexos, 'sexo': sexo,
+    idcesta = []
+    grupo = []
+    if request.user.username:
+        idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
+        grupo = request.user.groups.first()
+        grupo = grupo.name
+
+    return render(request, "paginas/producto.html", {'color': color, 'talla': talla, 'sexos': sexos, 'sexo': sexo, 'idcesta': idcesta,'grupo':grupo,
                                                      'valoracion': valoracion, 'tipo': tipocad, 'categorias': categorias,
                                                      'imagenes': imagenes, 'productos': datos_pagination['page_productos'],
                                                      'pagelist': datos_pagination['pageList'], 'num': datos_pagination['num'],
@@ -190,8 +206,15 @@ def producto_filtro_tipo(request,sexo,tipo,page):
     datos_pagination = pagination.pagination(productos, page)
     url = 'product/' + tipo
 
-    return render(request, "paginas/producto.html", {'color': color, 'talla': talla,'valoracion': valoracion, 'tipo': tipocad,
-                                                     'categorias': categorias,'imagenes': imagenes, 'sexos':sexos, 'sexo': sexo,
+    idcesta = []
+    grupo = []
+    if request.user.username:
+        idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
+        grupo = request.user.groups.first()
+        grupo = grupo.name
+
+    return render(request, "paginas/producto.html", {'color': color, 'talla': talla,'valoracion': valoracion, 'tipo': tipocad, 'idcesta':idcesta,
+                                                     'categorias': categorias,'imagenes': imagenes, 'sexos':sexos, 'sexo': sexo,'grupo':grupo,
                                                      'productos': datos_pagination['page_productos'],
                                                      'pagelist': datos_pagination['pageList'],
                                                      'num': datos_pagination['num'],'paginacion_url': url})
@@ -220,8 +243,15 @@ def producto_filtro_categoria(request,tipo,sexo,categoria,page):
     datos_pagination = pagination.pagination(productos, page)
     url = 'product/' + tipo + '/' + categoria
 
-    return render(request, "paginas/producto.html", {'color': color, 'talla': talla, 'sexos': sexos, 'sexo': sexo,
-                                                     'valoracion': valoracion, 'tipo': tipocad, 'categorias': categorias,
+    idcesta = []
+    grupo = []
+    if request.user.username:
+        idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
+        grupo = request.user.groups.first()
+        grupo = grupo.name
+
+    return render(request, "paginas/producto.html", {'color': color, 'talla': talla, 'sexos': sexos, 'sexo': sexo, 'idcesta': idcesta,
+                                                     'valoracion': valoracion, 'tipo': tipocad, 'categorias': categorias,'grupo':grupo,
                                                      'imagenes': imagenes, 'productos': datos_pagination['page_productos'],
                                                      'pagelist': datos_pagination['pageList'], 'num': datos_pagination['num'],
                                                      'paginacion_url': url})
@@ -251,6 +281,27 @@ def producto_detalle(request, id):
     # get
     productos = models.Productos.objects.filter(id=id).get()
     print(productos.getImagen())
+    totalcolor = len(productos.getColor())
+    total = len(productos.getTalla())
+    cli = models.Clientes.objects.filter(idusuario=productos.idusuario).get()
+    tip = "producto"
+
+    # contactar
+    misala = []
+    try:
+        misala = models.Salausuario.objects.filter(idusuario=productos.idusuario)
+        for m in misala:
+            n = models.Salausuario.objects.filter(idsala=m.idsala).filter(idusuario=request.user).get()
+            if(n):
+                misala = n
+        if not misala:
+            models.Salas.objects.create(fecha=timezone.now())
+            misala = models.Salas.objects.last()
+            models.Salausuario.objects.create(idsala=misala, idusuario=productos.idusuario)
+            models.Salausuario.objects.create(idsala=misala, idusuario=request.user)
+    except models.Salausuario.DoesNotExist:
+        None
+
     # o sacamos talla y color por aqui, o por model.py que he creado unos metodos
     # contenido = models.Productocontenido.objects.filter(idproducto=productos)
     # imagenes = models.Productoimagen.objects.filter(idproducto=productos)
@@ -263,22 +314,31 @@ def producto_detalle(request, id):
         listValora = ObtenerValoracion.SacarValoracion(valoraciones)
         media = listValora['media']
         del listValora['media']
-    return render(request, "paginas/producto_detalle.html", {'color': color, 'talla': talla,
-                                                     'valoracion': valoracion, 'tipo': tipocad,
-                                                     'categorias': categorias, 'producto': productos,
+
+    idcesta = []
+    grupo = []
+    if request.user.username:
+        idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
+        grupo = request.user.groups.first()
+        grupo = grupo.name
+
+    return render(request, "paginas/producto_detalle.html", {'color': color, 'talla': talla, 'idcesta': idcesta,'grupo': grupo,'cli':cli,
+                                                     'valoracion': valoracion, 'tipo': tipocad, 'total': total,'totalcolor':totalcolor,
+                                                     'categorias': categorias, 'producto': productos, 'tip': tip, 'misala': misala,
                                                      'media': media, 'valorado': valoraciones.count(), 'listvalora': listValora
                                                      })
 
 
-def producto_user(request,sexo,iduser,page):
+def producto_user(request,iduser,sexo,page):
     if (sexo == 'ninos' or sexo == 'ninas'):
-        sexo[2] = 'ñ'
+        sexo = sexo[:2] + "ñ" + sexo[3:]
     print(sexo)
     s = sexos.get(tipo=sexo)
     psexo = models.Productosexo.objects.filter(idsexo=s)
+    cli = models.Clientes.objects.filter(id=iduser).get()
     productos = []
     for t in psexo:
-        if(t.idproducto.idusuario.idclientes.id==iduser):
+        if(t.idproducto.idusuario.id==cli.idusuario.id):
             productos.append(t.idproducto)
 
     # sacar una imagen para cada productos
@@ -292,10 +352,14 @@ def producto_user(request,sexo,iduser,page):
     # print(imagenes,imagenes[0].idproducto.id,imagenes[1].idproducto.id)
     # Paginacion : llamar metodo pagination
     datos_pagination = pagination.pagination(productos, page)
-    url = 'product/' + str(iduser)
-
-    return render(request, "paginas/producto.html", {'color': color, 'talla': talla, 'sexos': sexos, 'sexo': sexo,
-                                                     'valoracion': valoracion, 'tipo': tipocad,
+    url = 'productcli/' + str(iduser)
+    idcesta = []
+    grupo = []
+    if request.user.username:
+        idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
+        grupo = request.user.groups.first()
+    return render(request, "paginas/producto.html", {'color': color, 'talla': talla, 'sexos': sexos, 'sexo': sexo, 'grupo': grupo.name,
+                                                     'valoracion': valoracion, 'tipo': tipocad, 'idcesta': idcesta,
                                                      'categorias': categorias,
                                                      'imagenes': imagenes,
                                                      'productos': datos_pagination['page_productos'],
@@ -329,9 +393,15 @@ def diseno(request, sexo, page):
     # Paginacion : llamar metodo pagination
     datos_pagination = pagination.pagination(productos, page)
     url = 'disign'
+    idcesta = []
+    grupo = []
+    if request.user.username:
+        idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
+        grupo = request.user.groups.first()
+        grupo = grupo.name
 
-    return render(request, "paginas/diseno.html", {'color': color, 'talla': talla, 'sexos': sexos, 'sexo': sexo,
-                                                     'valoracion': valoracion, 'tipo': tipocad,
+    return render(request, "paginas/diseno.html", {'color': color, 'talla': talla, 'sexos': sexos, 'sexo': sexo,'grupo':grupo,
+                                                     'valoracion': valoracion, 'tipo': tipocad, 'idcesta': idcesta,
                                                      'categorias': categorias,'imagenes': imagenes,
                                                      'productos': datos_pagination['page_productos'],
                                                      'pagelist': datos_pagination['pageList'],
@@ -358,10 +428,15 @@ def diseno_filtro_tipo(request, sexo, page, tipo):
     # Paginacion : llamar metodo pagination
     datos_pagination = pagination.pagination(productos, page)
     url = 'disign/' + tipo
-
-    return render(request, "paginas/diseno.html", {'color': color, 'talla': talla, 'sexos': sexos, 'sexo': sexo,
+    idcesta = []
+    grupo = []
+    if request.user.username:
+        idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
+        grupo = request.user.groups.first()
+        grupo = grupo.name
+    return render(request, "paginas/diseno.html", {'color': color, 'talla': talla, 'sexos': sexos, 'sexo': sexo,'grupo':grupo,
                                                      'valoracion': valoracion, 'tipo': tipocad,
-                                                     'categorias': categorias,
+                                                     'categorias': categorias, 'idcesta': idcesta,
                                                      'imagenes': imagenes,
                                                      'productos': datos_pagination['page_productos'],
                                                      'pagelist': datos_pagination['pageList'],
@@ -393,10 +468,15 @@ def diseno_filtro_categoria(request, sexo, page, tipo, categoria):
     # Paginacion : llamar metodo pagination
     datos_pagination = pagination.pagination(productos, page)
     url = 'disign/' + tipo + '/' + categoria
-
+    idcesta = []
+    grupo = []
+    if request.user.username:
+        idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
+        grupo = request.user.groups.first()
+        grupo = grupo.name
     return render(request, "paginas/diseno.html", {'color': color, 'talla': talla, 'sexos': sexos, 'sexo': sexo,
-                                                     'valoracion': valoracion, 'tipo': tipocad,
-                                                     'categorias': categorias,
+                                                     'valoracion': valoracion, 'tipo': tipocad, 'grupo':grupo,
+                                                     'categorias': categorias, 'idcesta': idcesta,
                                                      'imagenes': imagenes,
                                                      'productos': datos_pagination['page_productos'],
                                                      'pagelist': datos_pagination['pageList'],
@@ -427,7 +507,31 @@ def diseno_detalle(request, id):
     # get
     productos = models.Disenos.objects.filter(id=id).get()
     print(productos.getImagen())
+    cli = models.Clientes.objects.filter(idusuario=productos.idusuario).get()
+    tip ="diseno"
 
+    # contactar
+    misala = []
+    try:
+        misala = models.Salausuario.objects.filter(idusuario=productos.idusuario)
+        for m in misala:
+            n = models.Salausuario.objects.filter(idsala=m.idsala).filter(idusuario=request.user).get()
+            if (n):
+                misala = n
+        if not misala:
+            models.Salas.objects.create(fecha=timezone.now())
+            misala = models.Salas.objects.last()
+            models.Salausuario.objects.create(idsala=misala, idusuario=productos.idusuario)
+            models.Salausuario.objects.create(idsala=misala, idusuario=request.user)
+    except models.Salausuario.DoesNotExist:
+        None
+
+    # me gusta
+    g=[]
+    try:
+        g = models.Gustodiseno.objects.filter(iddiseno=productos).filter(idusuario=request.user).get()
+    except models.Gustodiseno.DoesNotExist:
+        print('none')
     valoraciones = models.Disenovalora.objects.filter(iddiseno=productos)
     listValora = {}
     media = 0
@@ -435,25 +539,34 @@ def diseno_detalle(request, id):
         listValora = ObtenerValoracion.SacarValoracion(valoraciones)
         media = listValora['media']
         del listValora['media']
-    return render(request, "paginas/diseno_detalle.html", {'color': color, 'talla': talla,
-                                                             'valoracion': valoracion, 'tipo': tipocad,
-                                                             'categorias': categorias, 'producto': productos,
+
+    idcesta = []
+    grupo = []
+    if request.user.username:
+        idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
+        grupo = request.user.groups.first()
+        grupo = grupo.name
+    return render(request, "paginas/diseno_detalle.html", {'color': color, 'talla': talla, 'idcesta': idcesta, 'grupo':grupo,
+                                                             'valoracion': valoracion, 'tipo': tipocad,'g':g, 'cli':cli, 'tip': tip,
+                                                             'categorias': categorias, 'producto': productos, 'misala': misala,
                                                              'media': media, 'valorado': valoraciones.count(),
                                                              'listvalora': listValora
                                                              })
 
 
-def diseno_user(request, sexo, iduser, page):
+def diseno_user(request, iduser, sexo, page):
     # database filtro
     if (sexo == 'ninos' or sexo == 'ninas'):
-        sexo[2] = 'ñ'
+        sexo = sexo[:2] + "ñ" + sexo[3:]
     print(sexo)
     # sacando productos de sexo
     s = sexos.get(tipo=sexo)
     psexo = models.Disenosexo.objects.filter(idsexo=s)
+
+    cli = models.Clientes.objects.filter(id=iduser).get()
     productos = []
     for t in psexo:
-        if( t.iddiseno.idusuario.idclientes.id==iduser ):
+        if( t.iddiseno.idusuario.id==cli.idusuario.id ):
             productos.append(t.iddiseno)
 
     # imagenes
@@ -465,15 +578,22 @@ def diseno_user(request, sexo, iduser, page):
 
     # Paginacion : llamar metodo pagination
     datos_pagination = pagination.pagination(productos, page)
-    url = 'disign/' + str(iduser)
-
-    return render(request, "paginas/diseno.html", {'color': color, 'talla': talla, 'sexos': sexos, 'sexo': sexo,
-                                                   'valoracion': valoracion, 'tipo': tipocad,
+    url = 'disigncli/' + str(iduser)
+    idcesta = []
+    grupo = []
+    if request.user.username:
+        idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
+        grupo = request.user.groups.first()
+        grupo = grupo.name
+    return render(request, "paginas/diseno.html", {'color': color, 'talla': talla, 'sexos': sexos, 'sexo': sexo, 'grupo':grupo,
+                                                   'valoracion': valoracion, 'tipo': tipocad, 'idcesta': idcesta,
                                                    'categorias': categorias, 'imagenes': imagenes,
                                                    'productos': datos_pagination['page_productos'],
                                                    'pagelist': datos_pagination['pageList'],
                                                    'num': datos_pagination['num'], 'paginacion_url': url})
 
+
+########################################################################################################################
 # AGENDA
 def agenda(request, page):
     # database
@@ -491,8 +611,15 @@ def agenda(request, page):
     datos_pagination = pagination.pagination(productos, page)
     url = 'contact'
 
-    return render(request, "paginas/agenda.html", { 'tipo': tipocad, 'categorias': categorias,
-                                                     'imagenes': imagenes,
+    idcesta = []
+    grupo = []
+    if request.user.username:
+        idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
+        grupo = request.user.groups.first()
+        grupo = grupo.name
+
+    return render(request, "paginas/agenda.html", { 'tipo': tipocad, 'categorias': categorias, 'grupo':grupo,
+                                                     'imagenes': imagenes, 'idcesta':idcesta,
                                                      'productos': datos_pagination['page_productos'],
                                                      'pagelist': datos_pagination['pageList'],
                                                      'num': datos_pagination['num'],
@@ -514,10 +641,15 @@ def agenda_categoria(request, page, categoria):
     # Paginacion : llamar metodo pagination
     datos_pagination = pagination.pagination(productos, page)
     url = 'contact/' + categoria
-
-    return render(request, "paginas/agenda.html", {'color': color, 'talla': talla,
+    idcesta = []
+    grupo = []
+    if request.user.username:
+        idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
+        grupo = request.user.groups.first()
+        grupo = grupo.name
+    return render(request, "paginas/agenda.html", {'color': color, 'talla': talla, 'grupo':grupo,
                                                    'valoracion': valoracion, 'tipo': tipocad,
-                                                   'categorias': categorias,
+                                                   'categorias': categorias, 'idcesta': idcesta,
                                                    'productos': datos_pagination['page_productos'],
                                                    'pagelist': datos_pagination['pageList'],
                                                    'num': datos_pagination['num'],
@@ -527,14 +659,19 @@ def agenda_detalle(request, id):
     # database
     # sacar informacion de este cliente id
     pcliente = models.Clientes.objects.get(id=id)
-    print(pcliente)
-    usuario = pcliente.getUser()
-    print(usuario)
-    direccion = models.Direcciones.objects.filter(idcliente=pcliente)[:1]
-    cad = models.Clientecategoria.objects.get(idcliente=pcliente)
+    direccion= []
+    try:
+        direccion = models.Direcciones.objects.filter(idcliente=pcliente).filter(elegido=1).get()
+    except models.Direcciones.DoesNotExist:
+        None
+
+    cad = models.Clientecategoria.objects.filter(idcliente=pcliente)
     # sacar los productos y disenos relacionados
-    productos = models.Productos.objects.filter(idusuario=usuario) [:4]
-    disenos = models.Disenos.objects.filter(idusuario=usuario)[:4]
+    productos = models.Productos.objects.filter(idusuario=pcliente.idusuario) [:4]
+    disenos = []
+    for c in cad:
+        if c.idcategoria.categoria == 'diseñadores':
+            disenos = models.Disenos.objects.filter(idusuario=pcliente.idusuario)[:4]
 
     # sacar imagenes relacionados
     # imagen = pcliente.getImagen()
@@ -552,8 +689,15 @@ def agenda_detalle(request, id):
     for d in disenos:
         imgd += models.Disenoimagen.objects.filter(iddiseno=d)[:1]
 
-    return render(request, "paginas/agenda_detalle.html", {'tipo': tipocad, 'categorias': categorias,
-                                                            'slider': slider,'productos': productos,
+    idcesta = []
+    grupo = []
+    if request.user.username:
+        idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
+        grupo = request.user.groups.first()
+        grupo = grupo.name
+
+    return render(request, "paginas/agenda_detalle.html", {'tipo': tipocad, 'categorias': categorias, 'grupo':grupo,
+                                                            'slider': slider,'productos': productos, 'idcesta': idcesta,
                                                            'disenos': disenos, 'cliente': pcliente, 'categoria': cad,
                                                            'imgp':imgp, 'imgd': imgd, 'direccion': direccion})
 
@@ -561,53 +705,157 @@ def agenda_detalle(request, id):
 # MENSAJERIA
 def mensajeria(request, page):
     # database
-    pcliente = models.Clientecategoria.objects.all()
-    productos = []
-    for p in pcliente:
-        productos.append(p.idcliente)
+    # cli = models.Clientes.objects.get(idusuario=request.user)
+    clis = []
+    productos = models.Salausuario.objects.filter(idusuario=request.user)
+    for s in productos:
+        try:
+            s_user = models.Salausuario.objects.filter(idsala=s.idsala).exclude(idusuario=s.idusuario).get()
+            clis.append(s_user)
+        except models.Salausuario.DoesNotExist:
+            None
 
-    imagenes = []
-    for p in productos:
-        imagenes += models.Clienteimagen.objects.filter(idcliente=p)
-    print(imagenes)
-
+    print('msg:',clis)
     # Paginacion : llamar metodo pagination
     datos_pagination = pagination.pagination(productos, page)
     url = 'message'
 
-    return render(request, "paginas/mensajeria.html", {'color': color, 'talla': talla,
-                                                   'valoracion': valoracion, 'tipo': tipocad,
-                                                   'categorias': categorias,
-                                                   'imagenes': imagenes,
+    idcesta = []
+    grupo = []
+    if request.user.username:
+        idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
+        grupo = request.user.groups.first()
+        grupo = grupo.name
+
+    return render(request, "paginas/mensajeria.html", {'color': color, 'talla': talla,'grupo':grupo,
+                                                   'valoracion': valoracion, 'tipo': tipocad, 'idcesta': idcesta,
+                                                   'categorias': categorias, 'clis': clis,
                                                    'productos': datos_pagination['page_productos'],
                                                    'pagelist': datos_pagination['pageList'],
                                                    'num': datos_pagination['num'],
                                                    'paginacion_url': url})
 
 
-def mensajeria_detalle(request, id):
-    return render(request, "paginas/mensajeria_detalle.html")
+def mensajeria_detalle(request, iduser, id):
+
+    misala = models.Salas.objects.filter(id=id).get()
+
+    models.Mensajes.objects.filter(idsala=misala).exclude(idusuario=request.user).update(estadomensaje='leido')
+    msgs = models.Mensajes.objects.filter(idsala=misala).order_by('fecha')
+
+    idcesta = []
+    grupo = []
+    if request.user.username:
+        idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
+        grupo = request.user.groups.first()
+        grupo = grupo.name
+
+    return render(request, "paginas/mensajeria_detalle.html", {'color': color, 'talla': talla, 'grupo': grupo,
+                                                       'valoracion': valoracion, 'tipo': tipocad, 'idcesta': idcesta,
+                                                       'categorias': categorias, 'msgs': msgs,'misala': misala})
+
+def mensajeria_submit(request,id):
+
+    m = request.POST.get("mensaje")
+    fecha = timezone.now()
+    sala = models.Salas.objects.filter(id=id).get()
+    models.Mensajes.objects.create(fecha=fecha,mensaje=m,estadomensajeuser='leido',estadomensaje='enviado',idusuario=request.user,idsala=sala)
+
+    return redirect('/message_chat/' + str(request.user.id) + '/' + str(id))
 
 ########################################################################################################################
 
 # CESTA
-def cesta(request):
-    return render(request, "paginas/cesta.html")
+def cesta(request,id):
 
-def search(request, page):
-    productos = models.Clientes.objects.all()
-    imagenes = models.Imagenes.objects.filter(~Q(nombre='slider'))
+    cesta = models.Cestas.objects.filter(id=id).get()
+    count = cesta.getLinea().count()
+    grupo = request.user.groups.first()
+    return render(request, "paginas/user_pedidos_detalle.html", {'color': color, 'talla': talla, 'grupo': grupo.name,
+                                                                 'valoracion': valoracion, 'tipo': tipocad,
+                                                                 'categorias': categorias, 'cesta': cesta,
+                                                                 'count': count})
+
+def lineacesta(request,id):
+
+    can = request.POST.get("cantidad")
+    cl = request.POST.get("cl")
+    tl = request.POST.get("tl")
+    finicio = timezone.now()
+
+    p = models.Productos.objects.get(id=id)
+    t = int(can) * float(p.precioactual)
+    micesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
+    if not micesta:
+        models.Cestas.objects.create(idusuario=request.user,idestado=ependiente,fcreacion=finicio)
+        micesta = models.Cestas.objects.last()
+
+    models.Lineacesta.objects.get_or_create(idproducto=p,idcesta=micesta,preciounitario=p.precioactual,cantidad=can,
+                                            total=t,color=cl,talla=tl,idestado=ependiente)
+
+    return redirect('/cart/'+ str(micesta.id))
+
+def search(request,valor, page):
+    # productos = models.Clientes.objects.all()
+    # imagenes = models.Imagenes.objects.filter(~Q(nombre='slider'))
     # Paginacion : llamar metodo pagination
-    datos_pagination = pagination.pagination(productos, page)
-    url = 'search'
 
-    return render(request, "paginas/search.html", {'color': color, 'talla': talla,
-                                                   'valoracion': valoracion, 'tipo': tipocad,
-                                                   'categorias': categorias,
-                                                   'imagenes': imagenes,
-                                                   'productos': datos_pagination['page_productos'],
-                                                   'pagelist': datos_pagination['pageList'],
-                                                   'num': datos_pagination['num'],
+    txt = ''
+    if request.method == 'POST':
+        txt = request.POST.get("busqueda")
+
+    txt = valor
+    print(txt)
+    productos = models.Productos.objects.filter(nombre__icontains=txt).order_by('-fecha')
+    disenos = models.Disenos.objects.filter(nombre__icontains=txt).order_by('-fecha')
+
+    # imagenes
+    dimagenes = []
+    for p in disenos:
+        dimagenes += models.Disenoimagen.objects.filter(iddiseno=p)[:1]
+    # imagenes
+    pimagenes = []
+    for p in productos:
+        pimagenes += models.Productoimagen.objects.filter(idproducto=p)[:1]
+
+    dpage = 1 * int(page)
+    ppage = 1 * int(page)
+    p_pagination = {'page_productos': ''}
+    d_pagination = {'page_productos': ''}
+    lp = 0
+    ld = 0
+    if(ppage <= productos.count()):
+        p_pagination = pagination.pagination(productos, page)
+        lp = len(p_pagination['pageList'])
+    if (dpage <= disenos.count()):
+        d_pagination = pagination.pagination(disenos, page)
+        ld = len(d_pagination['pageList'])
+
+    num = 1
+    pagelist = range(0)
+    if(lp >= ld):
+        pagelist = p_pagination['pageList']
+        num = p_pagination['num']
+    else:
+        pagelist = d_pagination['pageList']
+        num = d_pagination['num']
+
+    url = 'search/'+valor
+
+    idcesta = []
+    grupo = []
+    if request.user.username:
+        idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
+        grupo = request.user.groups.first()
+        grupo = grupo.name
+
+    return render(request, "paginas/search.html", {'color': color, 'talla': talla, 'grupo':grupo,
+                                                   'valoracion': valoracion, 'tipo': tipocad,'idcesta': idcesta,
+                                                   'categorias': categorias,'disenos': d_pagination['page_productos'],
+                                                   'dimg':dimagenes, 'pimg': pimagenes,
+                                                   'productos': p_pagination['page_productos'],
+                                                   'pagelist': pagelist,
+                                                   'num': num,
                                                    'paginacion_url': url})
 
 #########################################################################################################################

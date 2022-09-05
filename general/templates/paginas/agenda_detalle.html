@@ -13,11 +13,11 @@
                     <div class="col-3 hr-vertical text-center">
                         <img class="user_perfil_detalle" src="{{cliente.icon}}" alt="perfil">
                         <p>{{cliente.nombre|capfirst}}</p>
-                        <span><a href="message_chat/1"><button class="boton-producto mt-4 mx-1">Contactar</button></a></span>
+                        <span><a href="/message_chat/{{cliente.idusuario.id}}"><button class="boton-producto mt-4 mx-1">Contactar</button></a></span>
                     </div>
 
                     <div class="col-9 px-5 py-3">
-                        <h3>{{cliente.nombre|capfirst}} {{cliente.apellidos|capfirst}}</h3>
+                        <h3>{{cliente.nombre|capfirst}} {{cliente.apellidos|capfirst}}  {{cliente.empresa|capfirst}}</h3>
                         <hr>
                         <div class="row">
                             <div class="col">
@@ -26,7 +26,8 @@
                             </div>
                             <div class="col">
                                 <p>Localidad: {{direccion.calle|capfirst}}, {{direccion.localidad|capfirst}}-{{direccion.provincia|capfirst}}, {{direccion.pais|capfirst}}</p>
-                                <p>Categoria: {{categoria.idcategoria.categoria|capfirst}}</p>
+                                <p>Categoria: {%for c in categoria%}{{c.idcategoria.categoria|capfirst}} | {%endfor%}</p>
+
                             </div>
                         </div>
                         <hr>
@@ -37,21 +38,23 @@
                         <hr>
                         <div class="row mt-2">
                             <h3>Descripcion</h3>
-                            <p>*************</p>
+                            <p>{{cliente.descripcion}}}</p>
                         </div>
                         <hr>
                         <div class="row mt-2">
-                            {%if 'diseñadores' in categoria.idcategoria.categoria%}
-                            <h3>Mis diseños</h3>
-                            <!---Cards-->
-                            {%include "componentes/card-diseno.html" with imagenes=imgd productos=disenos%}
-                            <a href="/disign/{{cliente.id}}/mujer/1" class="mb-5"><span><button class="boton-producto">Ver más</button></span></a>
+                            {%for c in categoria%}
+                            {%if c.idcategoria.categoria == 'diseñadores'%}
+                                <h3>Mis diseños</h3>
+                                <!---Cards-->
+                                {%include "componentes/card-diseno.html" with imagenes=imgd productos=disenos%}
+                                <a href="/disigncli/{{cliente.id}}/mujer/1" class="mb-5"><span><button class="boton-producto">Ver más</button></span></a>
                             {%endif%}
+                            {%endfor%}
 
                             <h3>Mis productos</h3>
                             <!---Cards-->
                             {%include "componentes/card-producto.html" with imagenes=imgp%}
-                            <a href="/product/{{cliente.id}}/mujer/1"><span><button class="boton-producto">Ver más</button></span></a>
+                            <a href="/productcli/{{cliente.id}}/mujer/1"><span><button class="boton-producto">Ver más</button></span></a>
                         </div>
 
                     </div>

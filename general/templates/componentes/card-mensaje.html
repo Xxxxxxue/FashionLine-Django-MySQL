@@ -2,18 +2,27 @@
 
 <div class="container mt-4">
 {% for p in productos %}
-<div class="card .agenda-card mb-4">
-    <a class="agenda-card-link" href="/message_chat/{{p.id}}">
+<div class="card .agenda-card mb-4" >
+    <a class="agenda-card-link" href="/message_chat/{{p.idusuario.id}}/{{p.idsala.id}}">
         <div class="row">
             <div class="col-2 text-center my-2">
-                <img class="user_perfil" src="/static/user_icon.svg" alt="perfil">
+            {% for c in clis %}
+            {%if c.idsala == p.idsala%}
+                <img class="user_perfil" src="{{c.getCliente.icon}}" alt="perfil">
+            {%endif%}{%endfor%}
             </div>
             <div class="col-8 pt-3 pl-3">
-                <h3>{{name_usuario}}</h3>
-                <p>Ultimo mensaje</p>
+            {% for c in clis %}
+            {%if c.idsala == p.idsala%}
+                <h3>{{c.getCliente.nombre}} {{c.getCliente.apellidos}} .... {{c.getCliente.empresa}}</h3>
+            {%endif%}{%endfor%}
+
+                <p {%if p.getLastMsg.estadomensaje == 'enviado' and  p.getLastMsg.idusuario != request.user %}
+                style="font-weight: 700;"{%endif%}>{{p.getLastMsg.mensaje}}</p>
             </div>
             <div class="col-2 mt-2">
-                <p class="chat-tiempo-ultimo">1 semana, 5 horas</p>
+                <p class="chat-tiempo-ultimo" {%if p.getLastMsg.estadomensaje == 'enviado' and  p.getLastMsg.idusuario != request.user%}
+                style="font-weight: 700;"{%endif%}>{{p.getLastMsg.fecha}}</p>
             </div>
         </div>
     </a>

@@ -14,7 +14,69 @@ color = models.Colores.objects.all()
 talla =  models.Tallas.objects.all()
 valoracion = models.Valoraciones.objects.all()
 sexos = models.Sexos.objects.all()
+ependiente= models.Estados.objects.filter(estado='pendiente').get()
 
+
+#valoracion
+def valora(request, tipo, id):
+
+    r = "/"
+    valor = request.POST.get("estrellas")
+    print(valor)
+    v = models.Valoraciones.objects.filter(valoracion=valor).get()
+    if(tipo == "producto"):
+        p = models.Productos.objects.filter(id=id).get()
+        valorado = models.Productovalora.objects.filter(idproducto=p).filter(idusuario=request.user)
+        if (valorado):
+            valorado.update(idvaloracion=v)
+        else:
+            models.Productovalora.objects.get_or_create(idproducto=p,idvaloracion=v,idusuario=request.user)
+        r = "/product_detail/"+str(id)
+
+    if (tipo == "diseno"):
+        p = models.Disenos.objects.filter(id=id).get()
+        valorado = models.Disenovalora.objects.filter(iddiseno=p).filter(idusuario=request.user)
+        if (valorado):
+            valorado.update(idvaloracion=v)
+        else:
+            models.Disenovalora.objects.get_or_create(iddiseno=p, idvaloracion=v, idusuario=request.user)
+        r = "/disign_detail/" + str(id)
+
+    return redirect(r)
+
+# soy empresa
+def empresa(request):
+
+    if (request.method=='GET'):
+        idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
+        return render(request, "paginas/soy_empresa.html", {'color': color, 'talla': talla,
+                                                     'valoracion': valoracion, 'tipo': tipocad,
+                                                        'categorias': categorias,'idcesta':idcesta})
+    empresa = request.POST.get("empresa")
+    cif = request.POST.get("cif")
+    cuenta = request.POST.get("cuenta")
+    cat = request.POST.getlist('categoria')
+    models.Clientes.objects.filter(idusuario=request.user).update(empresa=empresa,cuenta=cuenta, cif=cif)
+
+    user_cli = models.Clientes.objects.filter(idusuario=request.user).get()
+    for c in cat:
+        filtercad = categorias.get(categoria=c)
+        models.Clientecategoria.objects.get_or_create(idcliente=user_cli, idcategoria=filtercad)
+
+    grupo = request.user.groups.first()
+    if(grupo.name=='diseñador'):
+        g = Group.objects.get(name='diseñador')
+        request.user.groups.remove(g)
+        g = Group.objects.get(name='ambos')
+        request.user.groups.add(g)
+    else:
+        g = Group.objects.get(name='none')
+        request.user.groups.remove(g)
+        g = Group.objects.get(name='empresa')
+        request.user.groups.add(g)
+
+    ruta = '/user/profile/' + str(request.user.id)
+    return redirect(ruta)
 
 #img
 def getImg(request, id):
@@ -33,10 +95,12 @@ def perfil(request, id):
     grupo = request.user.groups.first()
     print(grupo.name)
 
+    idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
+
     return render(request, "paginas/user_perfil.html", {'color': color, 'talla': talla,
                                                      'valoracion': valoracion, 'tipo': tipocad,
                                                         'categorias': categorias, 'cliente': cliente,
-                                                            'direcciones': direcciones,'localidad': localidad,'grupo':grupo.name})
+                                                            'direcciones': direcciones,'localidad': localidad,'grupo':grupo.name,'idcesta':idcesta})
 
 
 def perfil_edit(request, id):
@@ -134,15 +198,58 @@ def img_delete(request, id):
 #########################################################################################################################
 # PEDIDOS
 def pedidos(request):
+
+    cestas = models.Cestas.objects.filter(idusuario=request.user)
+    grupo = request.user.groups.first()
+
+    #empresas
+    prod = models.Productos.objects.filter(idusuario=request.user)
+    print(prod)
+    lcestas=[]
+    for p in prod:
+        try:
+            lps = models.Lineacesta.objects.filter(idproducto=p)
+            for lp in lps:
+                lcestas.append(lp)
+        except models.Lineacesta.DoesNotExist:
+            print('none')
+        print(lcestas)
+
+    idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
+
     return render(request, "paginas/user_pedidos.html", {'color': color, 'talla': talla,
-                                                   'valoracion': valoracion, 'tipo': tipocad,
-                                                   'categorias': categorias,})
+                                                   'valoracion': valoracion, 'tipo': tipocad,'grupo': grupo.name,
+                                                   'categorias': categorias,'cestas': cestas,'lcestas': lcestas,'idcesta':idcesta})
+
 
 def pedidos_detalle(request, id):
-    return render(request, "paginas/user_pedidos_detalle.html", {'color': color, 'talla': talla,
-                                                   'valoracion': valoracion, 'tipo': tipocad,
-                                                   'categorias': categorias,})
 
+    cesta = models.Cestas.objects.filter(id=id).get()
+    count = cesta.getLinea().count()
+    grupo = request.user.groups.first()
+    idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente)
+    return render(request, "paginas/user_pedidos_detalle.html", {'color': color, 'talla': talla,
+                                                   'valoracion': valoracion, 'tipo': tipocad, 'grupo': grupo.name,
+                                                   'categorias': categorias,'cesta': cesta, 'count': count,'idcesta':idcesta})
+
+def pedidos_estado(request,id):
+
+    e = request.POST.get("estado")
+    estado = models.Estados.objects.filter(estado=e).get()
+    models.Lineacesta.objects.filter(id=id).update(idestado=estado)
+
+    print("change estado ")
+    ruta = '/user/orders'
+    return redirect(ruta)
+
+def pedidos_delete(request,id):
+    print(id)
+    idcesta = models.Lineacesta.objects.filter(id=id).get().idcesta
+    models.Lineacesta.objects.filter(id=id).delete()
+
+    print("delete cart")
+    ruta = '/cart/'+ str(idcesta.id)
+    return redirect(ruta)
 
 #########################################################################################################################
 # MIS DISENOS
@@ -183,12 +290,15 @@ def misdisenos(request, sexo,page):
     datos_pagination = pagination.pagination(productos, page)
     url = 'user/mydisign'
 
+    idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
+
     return render(request, "paginas/user_disenos.html", {'color': color, 'talla': talla, 'sexos': sexos, 'sexo': sexo,
-                                                     'valoracion': valoracion, 'tipo': tipocad,
+                                                     'valoracion': valoracion, 'tipo': tipocad,'idcesta':idcesta,
                                                      'categorias': categorias,'imagenes': imagenes,
                                                      'productos': datos_pagination['page_productos'],
                                                      'pagelist': datos_pagination['pageList'],
                                                      'num': datos_pagination['num'], 'paginacion_url': url, 'grupo': grupo.name,'gustos':gustos})
+
 
 def misdisenos_edit(request,sexo,id,page):
     # post  datos diseno
@@ -198,12 +308,24 @@ def misdisenos_edit(request,sexo,id,page):
     p.precio = request.POST.get('precio')
     p.fecha = timezone.now()
 
+    grupo = request.user.groups.first()
+    if (grupo.name == 'empresa'):
+        g = Group.objects.get(name='empresa')
+        request.user.groups.remove(g)
+        g = Group.objects.get(name='ambos')
+        request.user.groups.add(g)
+    if(grupo.name == 'none'):
+        g = Group.objects.get(name='none')
+        request.user.groups.remove(g)
+        g = Group.objects.get(name='diseñador')
+        request.user.groups.add(g)
+
     producto = []
     if (id == 0):
         models.Disenos.objects.get_or_create(nombre=p.nombre, descripcion=p.descripcion, precio=p.precio,fecha=p.fecha, idusuario=request.user)
         producto = models.Disenos.objects.last()
     else:
-        models.Disenos.objects.filter(id=id).update(nombre=p.nombre, descripcion=p.descripcion, precio=p.precio,fecha=p.fecha)
+        models.Disenos.objects.filter(id=id).update(nombre=p.nombre, descripcion=p.descripcion, precio=p.precio)
         producto = models.Disenos.objects.get(id=id)
 
     idsexo = sexos.get(tipo=request.POST.get('sexo'))
@@ -244,7 +366,7 @@ def misdisenos_edit(request,sexo,id,page):
     ruta = '/user/mydisign/' + sexo + '/' + str(page)
     return redirect(ruta)
 
-def misdisenos_delete(request,sexo,page,id):
+def misdisenos_delete(request,sexo,id):
 
     imgs = models.Disenos.objects.filter(id=id).get().getImagen()
     for img in imgs:
@@ -252,7 +374,7 @@ def misdisenos_delete(request,sexo,page,id):
 
     models.Disenos.objects.filter(id=id).delete()
 
-    print("eliminado diseño -- " + str(page))
+    print("eliminado diseño ")
     ruta = '/user/mydisign/'+sexo+'/1'
     return redirect(ruta)
 
@@ -282,13 +404,15 @@ def misproductos(request,sexo, page):
 
     grupo = request.user.groups.first()
 
+    idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
+
     return render(request, "paginas/user_productos.html", {'color': color, 'talla': talla, 'sexos': sexos, 'sexo': sexo,
                                                      'valoracion': valoracion, 'tipo': tipocad, 'categorias': categorias,
                                                      'imagenes': imagenes, 'productos': datos_pagination['page_productos'],
                                                      'pagelist': datos_pagination['pageList'], 'num': datos_pagination['num'],
-                                                     'paginacion_url': url, 'grupo': grupo.name})
+                                                     'paginacion_url': url, 'grupo': grupo.name, 'idcesta':idcesta})
 
-def misproductos_edit(request,sexo,id,page):
+def misproductos_edit(request,sexo,page,id):
 
     #post  datos producto
     p = models.Productos
@@ -315,7 +439,7 @@ def misproductos_edit(request,sexo,id,page):
         models.Productos.objects.filter(id=id).update(nombre=p.nombre, descripcion=p.descripcion, referencia=p.referencia,
                                                precio=p.precio,cantidad=p.cantidad,idestado=p.idestado,
                                                coste=p.coste, oferta=p.oferta, precioactual=p.precioactual,
-                                               fecha=p.fecha, idiva=p.idiva)
+                                                idiva=p.idiva)
         producto = models.Productos.objects.get(id=id)
 
     sex = sexos.get(tipo=request.POST.get('sex'))
@@ -354,7 +478,7 @@ def misproductos_edit(request,sexo,id,page):
     ruta = '/user/myproduct/' + sexo + '/'+str(page)
     return redirect(ruta)
 
-def misproductos_delete(request,sexo,id,page):
+def misproductos_delete(request,sexo,id):
 
     imgs = models.Productos.objects.filter(id=id).get().getImagen()
     for img in imgs:
@@ -400,8 +524,10 @@ def favoritos(request, sexo, page):
     datos_pagination = pagination.pagination(productos, page)
     url = 'user/favorites'
 
+    idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
+
     return render(request, "paginas/user_favoritos.html", {'color': color, 'talla': talla, 'sexos': sexos, 'sexo': sexo,
-                                                         'valoracion': valoracion, 'tipo': tipocad,
+                                                         'valoracion': valoracion, 'tipo': tipocad, 'idcesta':idcesta,
                                                          'categorias': categorias, 'imagenes': imagenes,
                                                          'productos': datos_pagination['page_productos'],
                                                          'pagelist': datos_pagination['pageList'],
@@ -430,7 +556,9 @@ def megusta(request,id):
 def changeKey(request):
 
     if request.method == 'GET':
-        return render(request, "paginas/user_cambiarKey.html", {'tipo': tipocad, 'categorias': categorias,})
+        grupo = request.user.groups.first()
+        idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
+        return render(request, "paginas/user_cambiarKey.html", {'tipo': tipocad, 'categorias': categorias,'grupo': grupo.name,'idcesta': idcesta})
 
     print(request.user.password)
     password = request.POST.get('Password1')

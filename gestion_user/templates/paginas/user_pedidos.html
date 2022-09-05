@@ -24,20 +24,67 @@
                     </tr>
                     </thead>
                     <tbody class="table-body" style="font-size: 20px; font-weight: normal;">
-
-                    <tr>
-                        <th scope="row"> 1</th>
-                        <td>fecha</td>
-                        <td>11,99 €</td>
-                        <td>1</td>
-                        <td>en progreso</td>
-                        <td><a href="/user/orders_detail/1" class="link-pedido"><i class="bi bi-patch-exclamation"></i></a>
-                        </td>
-                    </tr>
+                    {%for cesta in cestas%}
+                        <tr>
+                            <th scope="row">{{cesta.id}}</th>
+                            <td>{{cesta.fultimo}}</td>
+                            <td>{{cesta.getLineaTotal}} €</td>
+                            <td>{{cesta.getLineaCount}}</td>
+                            <td>{{cesta.idestado.estado}}</td>
+                            <td><a href="/user/orders_detail/{{cesta.id}}" class="link-pedido"><i class="bi bi-patch-exclamation"></i></a>
+                            </td>
+                        </tr>
+                    {%endfor%}
 
                     </tbody>
                 </table>
             </div>
+
+            {%if grupo == 'empresa' or grupo == 'ambos'%}
+             <div class="table-pedido m-3 p-3">
+                <h3>Pedidos pendientes a realizar</h3>
+                <table class="table mt-3">
+                    <thead class="text-center">
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Importe total</th>
+                        <th scope="col">Cantidad total</th>
+                        <th scope="col">Situación</th>
+                        <th scope="col">Detalle</th>
+                        <th scope="col">Guardar</th>
+                    </tr>
+                    </thead>
+                    <tbody class="table-body" style="font-size: 20px; font-weight: normal;">
+                    {%for lcesta in lcestas%}
+                        <form action="/user/orders/estado/{{lcesta.id}}" method="post">
+                            {% csrf_token %}
+                        <tr>
+                            <th scope="row">{{lcesta.id}}</th>
+                            <td>{{lcesta.idcesta.fultimo}}</td>
+                            <td>{{lcesta.total}} €</td>
+                            <td>{{lcesta.cantidad}}</td>
+                            <td>
+                                <select class="w-100 " name="estado" id="estado">
+                                    <option value="{{lcesta.idestado.estado}}">{{lcesta.idestado.estado}}</option>
+                                    <option value="pendiente">pendiente</option>
+                                    <option value="enviado">enviado</option>
+                                    <option value="llegado">llegado</option>
+                                </select>
+
+                            </td>
+                            <td><a href="/user/orders_detail/{{lcesta.idcesta.id}}" class="link-pedido"><i class="bi bi-patch-exclamation"></i></a>
+                            </td>
+                            <td><button type="submit" class="btn btn-success">Guardar</button>
+                            </td>
+                        </tr>
+                        </form>
+                    {%endfor%}
+
+                    </tbody>
+                </table>
+            </div>
+            {%endif%}
         </div>
     </div>
 

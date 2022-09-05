@@ -5,6 +5,8 @@ from gestion_user import views
 urlpatterns = [
 
     path('img/<int:id>', views.getImg),
+    path('empresa', views.empresa),
+    path('valora/<slug:tipo>/<int:id>', views.valora),
 
     path('profile/<int:id>', views.perfil, name="perfil"),
     path('profile/direccion/<int:id>', views.perfil_dir, name="direccion"),
@@ -15,15 +17,17 @@ urlpatterns = [
 
     path('changeKey', views.changeKey),
     path('orders', views.pedidos),
+    path('orders/estado/<int:id>', views.pedidos_estado),
     path('orders_detail/<int:id>', views.pedidos_detalle),
+    path('orders/delete/<int:id>', views.pedidos_delete),
 
     path('mydisign/<slug:sexo>/<int:page>', views.misdisenos),
     path('mydisign/edit/<slug:sexo>/<int:page>/<int:id>', views.misdisenos_edit),
-    path('mydisign/delete/<slug:sexo>/<int:page>/<int:id>', views.misdisenos_delete),
+    path('mydisign/delete/<slug:sexo>/<int:id>', views.misdisenos_delete),
 
     path('myproduct/<slug:sexo>/<int:page>', views.misproductos),
     path('myproduct/edit/<slug:sexo>/<int:page>/<int:id>', views.misproductos_edit),
-    path('myproduct/delete/<slug:sexo>/<int:page>/<int:id>', views.misproductos_delete),
+    path('myproduct/delete/<slug:sexo>/<int:id>', views.misproductos_delete),
 
     path('favorites/<slug:sexo>/<int:page>', views.favoritos),
     path('favorites/delete/<slug:sexo>/<int:id>', views.favoritos_delete),

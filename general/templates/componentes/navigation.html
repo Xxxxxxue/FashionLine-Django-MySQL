@@ -114,7 +114,11 @@
                             <a class="dropdown-item" href="/user/profile/{{user.id}}">Perfil</a>
                             <a class="dropdown-item" href="/user/changeKey">Cambiar Contraseña</a>
                             <a class="dropdown-item" href="/user/orders">Mis pedidos</a>
-                            <a class="dropdown-item" href="/user/myproduct/mujer/1">Mis productos</a>
+                            {%if grupo == 'empresa' or grupo == 'ambos'%}
+                            <a class="link-usernav mt-2" href="/user/myproduct/mujer/1">Mis productos</a>
+                            {%else%}
+                            <a class="link-usernav mt-2" href="/user/empresa">Quiero ser empresa</a>
+                            {%endif%}
                             <a class="dropdown-item" href="/user/mydisign/mujer/1">
                                 {%if grupo == 'diseñador' or grupo == 'ambos'%}
                                     Mis diseños
@@ -129,14 +133,17 @@
                     {%endif%}
                 </ul>
                 <!--search-->
-                <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                    <a href="/search/1" class="btn btn-outline-dark my-2 my-sm-0" type="submit">Search</a>
+                <form class="form-inline my-2 my-lg-0" action="" method="post" id="edit-search">
+                    {% csrf_token %}
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="busqueda" id="busqueda" oninput="searchURL()">
+                    <input class="btn btn-outline-dark my-2 my-sm-0" type="submit" value="Search" >
                 </form>
 
                 <!--cesta-->
-                <a href="/cart"><img class="d-lg-block d-none carrito-icon"
+
+                <a {%if user.is_authenticated%} href="/cart/{{idcesta.id}}"{%endif%}><img class="d-lg-block d-none carrito-icon"
                                 src="{% static 'imagenes/shopping_icon.svg'%}"></a>
+
                 <!--login-->
                 <a title="iniciar sesion" {%if user.is_authenticated%} href="#" onmouseover="BlockUserNav()" onmouseout="NoneUserNav()" {%else%} href="/login" {%endif%}>
                     <img class="d-lg-block d-none usericon" src="{% static '/imagenes/user_icon.svg'%}" alt="iniciar sesion" >
@@ -145,7 +152,11 @@
                     <a class="link-usernav mt-2" href="/user/profile/{{user.id}}">Perfil</a>
                     <a class="link-usernav mt-2" href="/user/changeKey">Cambiar Contraseña</a>
                     <a class="link-usernav mt-2" href="/user/orders">Mis pedidos</a>
+                    {%if grupo == 'empresa' or grupo == 'ambos'%}
                     <a class="link-usernav mt-2" href="/user/myproduct/mujer/1">Mis productos</a>
+                    {%else%}
+                    <a class="link-usernav mt-2" href="/user/empresa">Quiero ser empresa</a>
+                    {%endif%}
                     <a class="link-usernav mt-2" href="/user/mydisign/mujer/1">
                          {%if grupo == 'diseñador' or grupo == 'ambos'%}
                             Mis diseños

@@ -59,6 +59,40 @@ function clickDevolu() {
     $('.descripcion').hide();
      $('.devolucion').show();
 }
+/*funcion talla cambia fondo*/
+function tallaon(count,total,talla){
+    for (i=0;i<total;i++) {
+        if(i==count){
+            document.getElementById('talla'+count).classList.toggle("active");
+            document.getElementById('tl').value=talla;
+        }
+
+        else
+            document.getElementById('talla'+i).classList.remove("active");
+    }
+
+}
+/*funcion color cambia fondo*/
+function coloron(count,total,color){
+    for (i=0;i<total;i++) {
+        if(i==count){
+            document.getElementById('color'+count).classList.toggle("active");
+            document.getElementById('cl').value=color;
+        }
+        else
+            document.getElementById('color'+i).classList.remove("active");
+    }
+
+}
+/*funcion suma resta cantidad*/
+function sumar(){
+    v =  document.getElementById('cantidad').value;
+     document.getElementById('cantidad').value = ++v;
+}
+function restar(){
+    v =  document.getElementById('cantidad').value;
+     document.getElementById('cantidad').value = --v;
+}
 
 /*funcion para valoracion media*/
 function valoracionMedia() {
@@ -138,5 +172,11 @@ function disenoEdit(id,nombre,descripcion,precio,sexo,page) {
     document.getElementById('descripcion').value = descripcion;
     document.getElementById('precio').value = precio;
     document.getElementById('sex').value = sexo;
+}
 
+/*search*/
+function searchURL(){
+    v = document.getElementById('busqueda').value;
+    console.log(v)
+    document.getElementById('edit-search').action= "/search/" + v + '/1';
 }

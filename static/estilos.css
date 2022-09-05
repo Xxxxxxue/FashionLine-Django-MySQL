@@ -240,10 +240,12 @@
 }
 .boton-talla {
     height: 40px;
-    background-color: #f8df72;
     margin-right: 15px;
     width: 40px;
     border: none;
+}
+.active {
+    background-color: #f8df72 !important;
 }
 .cantidad {
     width: 40px;
@@ -386,8 +388,7 @@
 }
 .chat-tiempo {
     position: absolute;
-    left: 85%;
-    margin: 2rem;
+    left: 75%;
     padding-top: 5px;
 }
 .manda-mensaje {

@@ -10,7 +10,7 @@
                     <a class="detalle-link" onclick="clickDevolu()">Envío y Devolución</a>
                 </div>
                 <div class="col-9 pl-5 descripcion" style="display: block;">
-                    <h5>{{producto.idusuario.idclientes.getCategoria|singular|capfirst}}: {{producto.idusuario.idclientes.nombre|capfirst}}</h5>
+                    <h5>{{cli.getCategoria|singular|capfirst}}: {{cli.empresa|capfirst}}</h5>
                     <p>{{producto.descripcion}}</p>
                     <br>
                     <p>Referencia: {{producto.referencia}}</p>
@@ -33,9 +33,10 @@
             <hr>
             <!--Valoraciones-->
             <div class="row my-3">
+            {%if user.is_authenticated%}
                 <div class="col-lg-5 col-md-12">
                     <h5>Valoración</h5>
-                    <form  action="{{request.get_full_path}}" method="post">
+                    <form  action="/user/valora/{{tip}}/{{producto.id}}" method="post">
                         {% csrf_token %}
                         <p class="clasificacion">
                           <input id="radio1" class="input-estrella" type="radio" name="estrellas" value="5">
@@ -52,6 +53,7 @@
                         <input class="btn btn-success ml-5 mt-3" type="submit" value="Valorar">
                     </form>
                 </div>
+                {%endif%}
                 <div class="col-lg-7 col-md pl-5">
                     <div class="common-reviews__averate">
                         <div class="common-reviews__averate-item">

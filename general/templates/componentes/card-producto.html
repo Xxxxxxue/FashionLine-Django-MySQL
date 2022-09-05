@@ -21,7 +21,7 @@
                 onclick="productEdit({{p.id}},'{{p.nombre}}','{{p.descripcion}}','{{p.referencia}}','{{p.precio}}',
                 '{{p.coste}}','{{p.oferta}}','{{p.precioactual}}','{{p.idiva.iva}}','{{p.cantidad}}','{{sexo}}',{{page}})"
                 >Edit</button>
-                <a href="/user/myproduct/delete/{{sexo}}/{{page}}/{{p.id}}" class="btn btn-dark w-100">Delete</a>
+                <a href="/user/myproduct/delete/{{sexo}}/{{p.id}}" class="btn btn-dark w-100">Delete</a>
             {%endif%}
         </div>
         {%endfor%}

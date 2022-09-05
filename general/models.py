@@ -30,7 +30,25 @@ class Cestas(models.Model):
     fcreacion = models.DateTimeField(db_column='Fcreacion', blank=True, null=True)  # Field name made lowercase.
     fultimo = models.DateTimeField(db_column='Fultimo', blank=True, null=True)  # Field name made lowercase.
     idusuario = models.ForeignKey(User, db_column='idUsuario', blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
-    idestados = models.ForeignKey('Estados', db_column='idEstados', blank=True, null=True, on_delete=models.SET_NULL)  # Field name made lowercase.
+    idestado = models.ForeignKey('Estados', db_column='idEstados', blank=True, null=True, on_delete=models.SET_NULL)  # Field name made lowercase.
+
+    def getLinea(self):
+        lineaList = self.lineacesta_set.all()
+        return lineaList
+
+    def getLineaTotal(self):
+        lineaList = self.lineacesta_set.all()
+        total = 0
+        for l in lineaList:
+            total += l.total
+        return total
+
+    def getLineaCount(self):
+        lineaList = self.lineacesta_set.all()
+        count = 0
+        for l in lineaList:
+            count += l.cantidad
+        return count
 
     class Meta:
         ordering = ['id']
@@ -192,10 +210,6 @@ class Disenos(models.Model):
                 tallaList.append(talla)
         return tallaList
 
-    def getGusto(self,u):
-        gusto = self.gustodiseno_set.filter(idusuario=u).gusta
-        print(gusto)
-        return gusto
 
     class Meta:
         ordering = ['id']
@@ -286,6 +300,8 @@ class Lineacesta(models.Model):
     preciounitario = models.DecimalField(db_column='PrecioUnitario', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
     cantidad = models.IntegerField(db_column='Cantidad', blank=True, null=True)  # Field name made lowercase.
     total = models.DecimalField(db_column='Total', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
+    color = models.CharField(db_column='color',max_length=45, blank=True, null=True)
+    talla = models.CharField(db_column='talla',max_length=45, blank=True, null=True)
     idpromocion = models.ForeignKey('Promociones', db_column='idPromocion', blank=True, null=True, on_delete=models.SET_NULL)  # Field name made lowercase.
     idestado = models.ForeignKey(Estados, db_column='idEstado', blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
 
@@ -300,8 +316,12 @@ class Mensajes(models.Model):
     idsala = models.ForeignKey('Salas', db_column='idSala', blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
     mensaje = models.TextField(blank=True, null=True)
     fecha = models.DateTimeField(blank=True, null=True)
-    idtipomensaje = models.ForeignKey('Tipomensaje', db_column='idTipoMensaje', blank=True, null=True, on_delete=models.SET_NULL)  # Field name made lowercase.
-    url = models.CharField(max_length=2500, blank=True, null=True)
+    estadomensaje = models.CharField(max_length=45, db_column='EstadoMensaje', blank=True, null=True)  # Field name made lowercase.
+    estadomensajeuser = models.CharField(max_length=45, db_column='EstadoMensajeUser', blank=True, null=True)
+
+    def getCliente(self):
+        cli = self.idusuario.clientes_set.get()
+        return cli
 
     class Meta:
         ordering = ['id']
@@ -355,6 +375,10 @@ class Productos(models.Model):
             img = i.idimagen
             if img not in imagenList:
                 imagenList.append(img)
+        return imagenList
+
+    def getImagenFirst(self):
+        imagenList = self.productoimagen_set.first().idimagen.imagen
         return imagenList
 
     def getColor(self):
@@ -440,6 +464,18 @@ class Salausuario(models.Model):
     idsala = models.OneToOneField(Salas, db_column='idSala', primary_key=True, on_delete=models.CASCADE)  # Field name made lowercase.
     idusuario = models.ForeignKey(User, db_column='idUsuario', on_delete=models.CASCADE)  # Field name made lowercase.
 
+    def getLastMsg(self):
+        List = self.idsala.mensajes_set.all().order_by('fecha')
+        List = List.last()
+        print(List)
+        return List
+
+    def getCliente(self):
+        List = self.idusuario.clientes_set.get()
+        print('cli',List.id)
+        return List
+
+
     class Meta:
         db_table = 'salausuario'
         unique_together = (('idsala', 'idusuario'),)
@@ -471,14 +507,6 @@ class Tipocategoria(models.Model):
         ordering = ['id']
         db_table = 'tipocategoria'
 
-
-class Tipomensaje(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    tipo = models.CharField(max_length=45, blank=True, null=True)
-
-    class Meta:
-        ordering = ['id']
-        db_table = 'tipomensaje'
 
 
 class Usuarios(models.Model):
