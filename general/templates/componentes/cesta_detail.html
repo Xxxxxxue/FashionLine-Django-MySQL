@@ -24,7 +24,7 @@
                         <tr>
                             <th scope="row">
                                 <div>
-                                    <a href="/product_detail/{{c.idproducto.id}}"><img alt="img" class="img-cesta" src="{{c.idproducto.getImagenFirst}}" srcset=""></a>
+                                    <a href="/product_detail/{{c.idproducto.id}}"><img alt="img" class="img-cesta" src="{{c.idproducto.getImagenFirst.idimagen.imagen}}" srcset=""></a>
                                 </div>
                             </th>
                             <td class="modal-tabla">
@@ -54,7 +54,7 @@
                         <h1 class="mt-4 d-inline-block ">{{cesta.getLineaTotal}} €</h1>
                     </span>
                     {%if 'cart' in request.path%}
-                        <button class="btn btn-success w-100 my-3">PAGAR</button>
+                        <a href="/pagado/{{cesta.id}}"><button class="btn btn-success w-100 my-3">PAGAR</button></a>
                     {%endif%}
                 </div>
             </div>

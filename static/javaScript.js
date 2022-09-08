@@ -180,3 +180,64 @@ function searchURL(){
     console.log(v)
     document.getElementById('edit-search').action= "/search/" + v + '/1';
 }
+
+/*filtrar*/
+function bucleFiltrar(div_ele, num) {
+    v = '';
+    num = parseInt(num);
+    console.log(div_ele.length)
+    for (var i=0, max=div_ele.length; i < max; i++) {
+        if(div_ele[i].hasChildNodes()){
+            console.log(div_ele[i].nodeName,div_ele[i].children.length,div_ele[i].children[num].nodeName)
+            if(div_ele[i].children[num].nodeName == "INPUT") {
+                if(div_ele[i].children[num].checked){
+                    v += '-' + div_ele[i].children[num].value;
+                    console.log(div_ele[i].children[num].value)
+                }
+            }
+
+        }
+
+    }
+    return v.slice(1);
+}
+function filtrar(tip,sexo) {
+    //divs sacar checked
+    fc = 'none'; fcolor='';
+    ft = 'none'; ftalla='';
+    fv = '0'; fval='';
+    fcad = 'none'; fca='';
+    fp = 'none'; fpr='';
+
+    div1 = document.getElementById('divcolor').childNodes;
+    fcolor = bucleFiltrar(div1,'0');
+    if(fcolor != '') {
+        fc=fcolor;
+        console.log(fc);
+    }
+
+    div2 = document.getElementById('divtalla').childNodes;
+    ftalla = bucleFiltrar(div2,'0');
+    if(ftalla != '') {
+        ft=ftalla;
+    }
+
+    div3 = document.getElementById('divval').childNodes;
+    fval = bucleFiltrar(div3,'0');
+    if(fval != '') {
+        fv=fval;
+    }
+
+    div4 = document.getElementById('divcad').childNodes;
+    fca = bucleFiltrar(div4,'0');
+    if(fca != '') {
+        fcad=fca;
+    }
+
+    fpr= document.getElementById('min-precio').value + '-' + document.getElementById('max-precio').value;
+    if(fpr != '-')
+        fp=fpr;
+
+    console.log("/filtro/"+tip+'/'+fc+'/'+ft+'/'+fv+'/'+fcad+'/'+fp+'/'+sexo+'/1');
+    document.getElementById('filtro').action= "/filtro/"+tip+'/'+fc+'/'+ft+'/'+fv+'/'+fcad+'/'+fp+'/'+sexo+'/1';
+}

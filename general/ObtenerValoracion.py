@@ -5,7 +5,7 @@ def SacarValoracion(valoraciones):
     correcto = 0
     mal = 0
     muymal = 0
-    print(valoraciones.count())
+    print(len(valoraciones))
     for v in valoraciones:
         media += v.idvaloracion.valoracion
         if (v.idvaloracion.valoracion == 5):
@@ -19,15 +19,15 @@ def SacarValoracion(valoraciones):
         if (v.idvaloracion.valoracion == 1):
             muymal += 1
 
-    media = media / valoraciones.count()
+    media = media / len(valoraciones)
     media = round(media, 2)
     # para cada valor de valoracion, calcula su porcentaje
     listValora = {
-        'excelente': round(excelente / valoraciones.count() * 100, 0),
-        'muy bien': round(muybien / valoraciones.count() * 100, 0),
-        'correcto': round(correcto / valoraciones.count() * 100, 0),
-        'mal': round(mal / valoraciones.count() * 100, 0),
-        'muy mal': round(muymal / valoraciones.count() * 100, 0),
+        'excelente': round(excelente / len(valoraciones) * 100, 0),
+        'muy bien': round(muybien / len(valoraciones) * 100, 0),
+        'correcto': round(correcto / len(valoraciones) * 100, 0),
+        'mal': round(mal / len(valoraciones) * 100, 0),
+        'muy mal': round(muymal / len(valoraciones) * 100, 0),
         'media': media
     }
     return listValora

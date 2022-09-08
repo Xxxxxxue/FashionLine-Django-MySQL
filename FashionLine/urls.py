@@ -37,10 +37,13 @@ urlpatterns = [
 
 
     path('search/<slug:valor>/<int:page>', views.search),
+    path('filtro/<slug:tip>/<slug:fc>/<slug:ft>/<slug:fv>/<slug:fcad>/<slug:fp>/<slug:sexo>/<int:page>', views.filtro),
+
     path('cart/<int:id>', views.cesta),
     path('cart/compra/<int:id>', views.lineacesta),
+    path('pagado/<int:id>', views.pagado),
 
 
 ]
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+# urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

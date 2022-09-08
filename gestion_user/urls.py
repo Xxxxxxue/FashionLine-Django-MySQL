@@ -33,5 +33,5 @@ urlpatterns = [
     path('favorites/delete/<slug:sexo>/<int:id>', views.favoritos_delete),
     path('megusta/<int:id>', views.megusta),
 ]
-from FashionLine import settings
-urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+#from FashionLine import settings
+#urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

@@ -289,12 +289,13 @@ def misdisenos(request, sexo,page):
     # Paginacion : llamar metodo pagination
     datos_pagination = pagination.pagination(productos, page)
     url = 'user/mydisign'
+    tip = 'mydiseno'
 
     idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
 
     return render(request, "paginas/user_disenos.html", {'color': color, 'talla': talla, 'sexos': sexos, 'sexo': sexo,
                                                      'valoracion': valoracion, 'tipo': tipocad,'idcesta':idcesta,
-                                                     'categorias': categorias,'imagenes': imagenes,
+                                                     'categorias': categorias,'imagenes': imagenes, 'tip':tip,
                                                      'productos': datos_pagination['page_productos'],
                                                      'pagelist': datos_pagination['pageList'],
                                                      'num': datos_pagination['num'], 'paginacion_url': url, 'grupo': grupo.name,'gustos':gustos})
@@ -401,12 +402,13 @@ def misproductos(request,sexo, page):
 
     datos_pagination = pagination.pagination(productos, page)
     url = 'user/myproduct'
+    tip='myproduct'
 
     grupo = request.user.groups.first()
 
     idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
 
-    return render(request, "paginas/user_productos.html", {'color': color, 'talla': talla, 'sexos': sexos, 'sexo': sexo,
+    return render(request, "paginas/user_productos.html", {'color': color, 'talla': talla, 'sexos': sexos, 'sexo': sexo, 'tip': tip,
                                                      'valoracion': valoracion, 'tipo': tipocad, 'categorias': categorias,
                                                      'imagenes': imagenes, 'productos': datos_pagination['page_productos'],
                                                      'pagelist': datos_pagination['pageList'], 'num': datos_pagination['num'],
@@ -523,12 +525,13 @@ def favoritos(request, sexo, page):
     # Paginacion : llamar metodo pagination
     datos_pagination = pagination.pagination(productos, page)
     url = 'user/favorites'
+    tip = 'fav'
 
     idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
 
     return render(request, "paginas/user_favoritos.html", {'color': color, 'talla': talla, 'sexos': sexos, 'sexo': sexo,
                                                          'valoracion': valoracion, 'tipo': tipocad, 'idcesta':idcesta,
-                                                         'categorias': categorias, 'imagenes': imagenes,
+                                                         'categorias': categorias, 'imagenes': imagenes, 'tip': tip,
                                                          'productos': datos_pagination['page_productos'],
                                                          'pagelist': datos_pagination['pageList'],
                                                          'num': datos_pagination['num'], 'paginacion_url': url,
@@ -548,8 +551,8 @@ def megusta(request,id):
     d = models.Disenos.objects.filter(id=id).get()
     models.Gustodiseno.objects.get_or_create(idusuario=request.user,iddiseno=d,gusta=True)
 
-    print(request)
-    return redirect('/user/favorites/mujer/1')
+
+    return redirect('/disign_detail/'+ str(id))
 
 #########################################################################################################################
 # CAMBIAR CONTRASEÑA

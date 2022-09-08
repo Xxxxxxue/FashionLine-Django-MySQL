@@ -123,6 +123,9 @@ class Colores(models.Model):
     color = models.CharField(max_length=50, blank=True, null=True)
     nombre = models.CharField(max_length=45, blank=True, null=True)
 
+    def __str__(self):
+        return "( " + str(self.id) + " ) - " + self.nombre
+
     class Meta:
         ordering = ['id']
         db_table = 'colores'
@@ -186,6 +189,18 @@ class Disenos(models.Model):
         cad = self.disenocategoria_set.first().idcategoria.categoria
         return cad.replace('ñ','n')
 
+    def getAllCategoria(self):
+        cadList = []
+        for c in self.disenocategoria_set.all():
+            cad = c.idcategoria
+            if cad not in cadList:
+                cadList.append(cad)
+        return cadList
+
+    def getImagenFirst(self):
+        imagenList = self.disenoimagen_set.first()
+        return imagenList
+
     def getImagen(self):
         imagenList = []
         for i in self.disenoimagen_set.all():
@@ -209,6 +224,15 @@ class Disenos(models.Model):
             if talla not in tallaList:
                 tallaList.append(talla)
         return tallaList
+
+    def getValoracion(self):
+        valList = []
+        if (self.disenovalora_set.exists()):
+            for t in self.disenovalora_set.all():
+                val = t.idvaloracion
+                if val not in valList:
+                    valList.append(t)
+        return valList
 
 
     class Meta:
@@ -235,8 +259,8 @@ class Disenotalla(models.Model):
 
 
 class Disenovalora(models.Model):
-    iddiseno = models.OneToOneField(Disenos, db_column='idDiseno', primary_key=True, on_delete=models.CASCADE)  # Field name made lowercase.
-    idusuario = models.ForeignKey(User, db_column='idUsuario', on_delete=models.CASCADE)  # Field name made lowercase.
+    iddiseno = models.ForeignKey(Disenos, db_column='idDiseno',  on_delete=models.CASCADE)  # Field name made lowercase.
+    idusuario = models.OneToOneField(User, db_column='idUsuario', primary_key=True,on_delete=models.CASCADE)  # Field name made lowercase.
     idvaloracion = models.ForeignKey('Valoraciones', db_column='idValoracion', blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
 
     class Meta:
@@ -369,6 +393,14 @@ class Productos(models.Model):
         cad = self.productocategoria_set.first().idcategoria.categoria
         return cad.replace('ñ','n')
 
+    def getAllCategoria(self):
+        cadList = []
+        for c in self.productocategoria_set.all():
+            cad = c.idcategoria
+            if cad not in cadList:
+                cadList.append(cad)
+        return cadList
+
     def getImagen(self):
         imagenList = []
         for i in self.productoimagen_set.all():
@@ -378,7 +410,7 @@ class Productos(models.Model):
         return imagenList
 
     def getImagenFirst(self):
-        imagenList = self.productoimagen_set.first().idimagen.imagen
+        imagenList = self.productoimagen_set.first()
         return imagenList
 
     def getColor(self):
@@ -396,6 +428,15 @@ class Productos(models.Model):
             if talla not in tallaList:
                 tallaList.append(talla)
         return tallaList
+
+    def getValoracion(self):
+        valList = []
+        if(self.productovalora_set.exists()):
+            for t in self.productovalora_set.all():
+                val = t.idvaloracion
+                if val not in valList:
+                    valList.append(t)
+        return valList
 
     class Meta:
         ordering = ['id']
@@ -428,8 +469,8 @@ class Productosexo(models.Model):
 
 
 class Productovalora(models.Model):
-    idproducto = models.OneToOneField(Productos, db_column='idProducto', primary_key=True, on_delete=models.CASCADE)  # Field name made lowercase.
-    idusuario = models.ForeignKey(User, db_column='idUsuario', on_delete=models.CASCADE)  # Field name made lowercase.
+    idproducto = models.ForeignKey(Productos, db_column='idProducto',  on_delete=models.CASCADE)  # Field name made lowercase.
+    idusuario = models.OneToOneField(User, db_column='idUsuario', primary_key=True, on_delete=models.CASCADE)  # Field name made lowercase.
     idvaloracion = models.ForeignKey('Valoraciones', db_column='idValoracion', blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
 
     class Meta:
