@@ -178,7 +178,7 @@ function disenoEdit(id,nombre,descripcion,precio,sexo,page) {
 function searchURL(){
     v = document.getElementById('busqueda').value;
     console.log(v)
-    document.getElementById('edit-search').action= "/search/" + v + '/1';
+    document.getElementById('edit-search').action= "/search/" + v + '/mujer/1';
 }
 
 /*filtrar*/

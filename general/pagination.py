@@ -3,7 +3,7 @@ import math
 
 def pagination(productos, page):
     # Paginacion  datos, num:cuantos quiere poner en una pagina
-    pager = Paginator(productos, 1)
+    pager = Paginator(productos, 8)
     # print(pager)
     # num es pagina actual, recogido informacion de parametros
     num = int(page)
@@ -24,7 +24,7 @@ def pagination(productos, page):
 
     #indices de las paginas
     pageList = range(begin, end + 1)
-
+    print(pageList)
     # valores a exportar en views.py
     datos_pagination = {
         'page_productos': page_productos,

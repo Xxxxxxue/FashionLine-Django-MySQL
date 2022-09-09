@@ -783,7 +783,7 @@ def cesta(request,id):
     cesta = models.Cestas.objects.get(id=id)
     count = cesta.getLinea().count()
     grupo = request.user.groups.first()
-    return render(request, "paginas/cesta.html", {'color': color, 'talla': talla, 'grupo': grupo.name,
+    return render(request, "paginas/cesta.html", {'color': color, 'talla': talla, 'grupo': grupo.name, 'idcesta':cesta,
                                                                  'valoracion': valoracion, 'tipo': tipocad,
                                                                  'categorias': categorias, 'cesta': cesta,
                                                                  'count': count})
@@ -826,7 +826,7 @@ def pagado(request,id):
 
 
 ########################################################################################################################
-def search(request,valor, page):
+def search(request,valor,sexo,page):
     # productos = models.Clientes.objects.all()
     # imagenes = models.Imagenes.objects.filter(~Q(nombre='slider'))
     # Paginacion : llamar metodo pagination
@@ -835,6 +835,11 @@ def search(request,valor, page):
     if request.method == 'POST':
         txt = request.POST.get("busqueda")
 
+    if (sexo == 'ninos' or sexo == 'ninas'):
+        sexo = sexo[:2] + "ñ" + sexo[3:]
+    # sacando productos de sexo
+    s = sexos.get(tipo=sexo)
+
     txt = valor
     print(txt)
     productos = models.Productos.objects.filter(nombre__icontains=txt).order_by('-fecha')
@@ -842,36 +847,47 @@ def search(request,valor, page):
 
     # imagenes
     dimagenes = []
+    ds = []
+    pd = models.Productosexo.objects.filter(idsexo=s)
+    pd1 = models.Disenosexo.objects.filter(idsexo=s)
+    prod = []
+    for t in pd:
+        prod.append(t.idproducto)
+    prod1 = []
+    for t in pd1:
+        prod1.append(t.iddiseno)
+
     for p in disenos:
         dimagenes += models.Disenoimagen.objects.filter(iddiseno=p)[:1]
+        if (p in prod):
+            ds.append(p)
+    disenos = ds
     # imagenes
     pimagenes = []
+    ps = []
     for p in productos:
         pimagenes += models.Productoimagen.objects.filter(idproducto=p)[:1]
+        if (p in prod):
+            ps.append(p)
+    productos = ps
 
-    dpage = 1 * int(page)
-    ppage = 1 * int(page)
+
     p_pagination = {'page_productos': ''}
     d_pagination = {'page_productos': ''}
-    lp = 0
-    ld = 0
-    if(ppage <= productos.count()):
-        p_pagination = pagination.pagination(productos, page)
-        lp = len(p_pagination['pageList'])
-    if (dpage <= disenos.count()):
-        d_pagination = pagination.pagination(disenos, page)
-        ld = len(d_pagination['pageList'])
-
     num = 1
     pagelist = range(0)
-    if(lp >= ld):
+    if(len(disenos) <= len(productos)):
+        p_pagination = pagination.pagination(productos, page)
         pagelist = p_pagination['pageList']
         num = p_pagination['num']
     else:
+        d_pagination = pagination.pagination(disenos, page)
         pagelist = d_pagination['pageList']
         num = d_pagination['num']
+    print(len(p_pagination))
 
-    url = 'search/'+valor
+
+    url = 'search/' + valor
     tip = 'search'
 
     idcesta = []
@@ -884,7 +900,7 @@ def search(request,valor, page):
     return render(request, "paginas/search.html", {'color': color, 'talla': talla, 'grupo':grupo, 'tip': tip,
                                                    'valoracion': valoracion, 'tipo': tipocad,'idcesta': idcesta,
                                                    'categorias': categorias,'disenos': d_pagination['page_productos'],
-                                                   'dimg':dimagenes, 'pimg': pimagenes,
+                                                   'dimg':dimagenes, 'imagenes': pimagenes, 'sexo': sexo,
                                                    'productos': p_pagination['page_productos'],
                                                    'pagelist': pagelist,
                                                    'num': num,
@@ -897,7 +913,9 @@ def filtro(request,tip,fc,ft,fv,fcad,fp,sexo,page):
 
 
     productos = []
+    disenos = []
     card = []
+    s = []
     prender = ""
     #filtrar todos
     if (sexo == 'ninos' or sexo == 'ninas'):
@@ -917,12 +935,17 @@ def filtro(request,tip,fc,ft,fv,fcad,fp,sexo,page):
     elif (tip == 'mydiseno'):
         productos = models.Disenos.objects.filter(idusuario=request.user).order_by("-fecha")
         prender = "paginas/user_disenos.html"
-    else:
+    elif(tip == 'fav'):
         productos = models.Gustodiseno.objects.filter(idusuario=request.user)
         for i in productos:
             card.append(i.iddiseno)
         productos = card
         prender = "paginas/user_favoritos.html"
+
+    else:
+        productos = models.Productos.objects.all().order_by("-fecha")
+        disenos = models.Disenos.objects.all().order_by("-fecha")
+        prender = "paginas/search.html"
 
     if(fc == 'none' and ft == 'none' and fcad == 'none' and fv == 0 and fp == 'none'):
         None
@@ -941,6 +964,15 @@ def filtro(request,tip,fc,ft,fv,fcad,fp,sexo,page):
                     print(p.getColor())
             productos = card
 
+            if(tip == 'search'):
+                card = []
+                for p in disenos:
+                    if any(c in p.getColor() for c in fidcolor):
+                        print(1)
+                        card.append(p)
+                        print(p.getColor())
+                disenos = card
+
         # talla
         if (ft != 'none'):
             card = []
@@ -952,8 +984,16 @@ def filtro(request,tip,fc,ft,fv,fcad,fp,sexo,page):
                     print(1)
                     card.append(p)
                     print(p.getTalla())
-
             productos = card
+
+            if (tip == 'search'):
+                card = []
+                for p in disenos:
+                    if any(c in p.getTalla() for c in fidtalla):
+                        print(1)
+                        card.append(p)
+                        print(p.getTalla())
+                disenos = card
 
         # valoracion
         if (fv != '0'):
@@ -977,6 +1017,24 @@ def filtro(request,tip,fc,ft,fv,fcad,fp,sexo,page):
                         print('media:',m,p)
             productos = card
 
+            if (tip == 'search'):
+                card = []
+                for p in disenos:
+
+                    valoraciones = p.getValoracion()
+                    print('valoracion: ', len(valoraciones))
+                    listValora = {}
+                    media = 0
+                    if (valoraciones):
+                        listValora = ObtenerValoracion.SacarValoracion(valoraciones)
+                        media = listValora['media']
+                        # despues de sacar media
+                        m = valoracion.get(valoracion=media)
+                        if (m in fidvalora):
+                            card.append(p)
+                            print('media:', m, p)
+                disenos = card
+
         # categoria
         if (fcad != 'none'):
             card = []
@@ -990,6 +1048,15 @@ def filtro(request,tip,fc,ft,fv,fcad,fp,sexo,page):
                     print(p.getAllCategoria())
             productos = card
 
+            if (tip == 'search'):
+                card = []
+                for p in disenos:
+                    if any(c in p.getAllCategoria() for c in fidcad):
+                        print(1)
+                        card.append(p)
+                        print(p.getAllCategoria())
+                disenos = card
+
         # precio
         if (fp != 'none'):
             card = []
@@ -1001,8 +1068,17 @@ def filtro(request,tip,fc,ft,fv,fcad,fp,sexo,page):
             print(card)
             productos = card
 
+            if (tip == 'search'):
+                card = []
+                for p in disenos:
+                    if (p.precio >= float(fprice[0]) and p.precio <= float(fprice[1])):
+                        card.append(p)
+                disenos = card
+
+
     # sacar una imagen para cada producto
-    imagenes = []
+    pimagenes = []
+    dimagenes = []
     if (tip == 'product' or tip == 'myproduct'):
         pd = models.Productosexo.objects.filter(idsexo=s)
         prod = []
@@ -1014,21 +1090,51 @@ def filtro(request,tip,fc,ft,fv,fcad,fp,sexo,page):
         prod = []
         for t in pd:
             prod.append(t.iddiseno)
+    else:
+        pd = models.Productosexo.objects.filter(idsexo=s)
+        pd1 = models.Disenosexo.objects.filter(idsexo=s)
+        prod = []
+        for t in pd:
+            prod.append(t.idproducto)
+        prod1 = []
+        for t in pd1:
+            prod1.append(t.iddiseno)
+
+
     card=[]
     for p in productos:
-        imagenes.append(p.getImagenFirst())
+        pimagenes.append(p.getImagenFirst())
         print(p)
         if (p in prod):
             print(0)
             print(prod)
             card.append(p)
-
     productos = card
 
+    if( tip== 'search'):
+        card = []
+        for p in disenos:
+            dimagenes.append(p.getImagenFirst())
+            if (p in prod1):
+                card.append(p)
+        disenos = card
 
-    # Paginacion : llamar metodo pagination
-    datos_pagination = pagination.pagination(productos, page)
+    p_pagination = {'page_productos': ''}
+    d_pagination = {'page_productos': ''}
+    num = 1
+    pagelist = range(0)
+    if (len(disenos) <= len(productos)):
+        p_pagination = pagination.pagination(productos, page)
+        pagelist = p_pagination['pageList']
+        num = p_pagination['num']
+    else:
+        d_pagination = pagination.pagination(disenos, page)
+        pagelist = d_pagination['pageList']
+        num = d_pagination['num']
+    print(len(p_pagination))
+
     url = 'filtro/'+tip+'/'+fc+'/'+ft+'/'+fv+'/'+fcad+'/'+fp
+
 
     idcesta = []
     grupo = []
@@ -1038,10 +1144,11 @@ def filtro(request,tip,fc,ft,fv,fcad,fp,sexo,page):
         grupo = grupo.name
 
     return render(request, prender, {'color': color, 'talla': talla,'valoracion': valoracion, 'tipo': tipocad, 'idcesta':idcesta,
-                                                     'categorias': categorias,'imagenes': imagenes, 'sexos':sexos, 'sexo': sexo,'grupo':grupo,
-                                                     'productos': datos_pagination['page_productos'], 'tip': tip, 'fcad': fcad,'fp':fp,
-                                                     'pagelist': datos_pagination['pageList'],'fc':fc,'ft':ft,'fv':fv,
-                                                     'num': datos_pagination['num'],'paginacion_url': url})
+                                                     'categorias': categorias,'imagenes': pimagenes, 'dimg':dimagenes,'sexos':sexos, 'sexo': sexo,'grupo':grupo,
+                                                     'productos': p_pagination['page_productos'], 'tip': tip, 'fcad': fcad,'fp':fp,
+                                                     'pagelist': pagelist, 'fc': fc, 'ft': ft, 'fv': fv,
+                                                     'num': num,'paginacion_url': url,
+                                                      'disenos': d_pagination['page_productos'],})
 
 
 

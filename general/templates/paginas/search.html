@@ -10,9 +10,10 @@
     <div class="container-fluid m-0 p-0">
         <!--Parte filtro Collapse-->
         {%include "componentes/filtro.html"%}
+        {%include "componentes/sexo.html"%}
         <!--Cards de productos, disenos, agendas-->
         <h3 class="mt-2 ml-5">Productos</h3>
-        {%include "componentes/card-producto.html" with imagenes=pimg%}
+        {%include "componentes/card-producto.html" %}
         <hr>
         <h3 class="mt-2 ml-5">Diseños</h3>
         {%include "componentes/card-diseno.html" with productos=disenos  imagenes=dimg%}

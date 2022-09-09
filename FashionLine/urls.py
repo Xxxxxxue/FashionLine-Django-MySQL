@@ -37,7 +37,7 @@ urlpatterns = [
     path('message_submit/<int:id>', views.mensajeria_submit),
 
 
-    path('search/<slug:valor>/<int:page>', views.search),
+    path('search/<slug:valor>/<slug:sexo>/<int:page>', views.search),
     path('filtro/<slug:tip>/<slug:fc>/<slug:ft>/<slug:fv>/<slug:fcad>/<slug:fp>/<slug:sexo>/<int:page>', views.filtro),
 
     path('cart/<int:id>', views.cesta),
