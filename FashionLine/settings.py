@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'general.apps.GeneralConfig',
     'gestion_user.apps.GestionUserConfig',
+    'email_reset.apps.EmailResetConfig',
 ]
 
 MIDDLEWARE = [
@@ -62,6 +63,7 @@ TEMPLATES = [
             os.path.join(BASE_DIR, '../general/templates/componentes'),
             os.path.join(BASE_DIR, '../general/templates/paginas'),
             os.path.join(BASE_DIR, '../gestion_user/templates'),
+            os.path.join(BASE_DIR, '../email_reset/templates'),
 
         ],
         'APP_DIRS': True,
@@ -142,3 +144,24 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/imagenes')
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Email
+
+EMAIL_HOST = 'smtp.gmail.com'
+
+EMAIL_PORT = 587
+
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = 'nievealas@gmail.com'
+
+EMAIL_HOST_PASSWORD = 'wczcgbfqjiptjody'
+
+DOMAIN = ''
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+LOGIN_URL = '/login/'
+
+EMAIL_FROM ='python<nievealas@gmail.com>'

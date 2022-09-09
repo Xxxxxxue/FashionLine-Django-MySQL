@@ -1,0 +1,59 @@
+{% extends 'resetbase.html' %}
+
+{% block content %}
+<div class="container mt-5 pt-3">
+    <h1 class="text-center mb-5">RESETEAR LA CONTRASEÑA</h1>
+    <div class="row col-lg-6" style="margin: auto;">
+    <form action=".." method="post">
+        <input type="hidden" name="next" value="{{ next }}">
+        {% csrf_token %}
+
+        <div class="row mb-3 ">
+            <div class="input-group mb-3">
+                {{ form.username }}
+                <div class="input-group-append">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col text-center" >
+                <button type="submit" class="btn btn-success">
+                     Enviar
+                </button>
+            </div>
+        </div>
+
+        <p class="text-center mt-2" style="font-size: 13px;">
+            Si deseas volver al login da un click <a href="{% url 'login' %}">aqui </a>
+        </p>
+    </form>
+    </div>
+</div>
+
+
+<script type="application/javascript">
+            $(function () {
+                $('form').on('submit', function (e) {
+                    e.preventDefault();
+                    var parameters = new FormData(this);
+                    submit_with_ajax(window.location.pathname,
+                    'Notificación', '¿Estas seguro de resetear tu contraseña?', parameters, function () {
+                        Swal.fire({
+                            title: 'Notificación',
+                            text: 'Se ha enviado un correo electrónico con los pasos a seguir para que pueda resetear su contraseña',
+                            icon: 'success',
+                            timer: 5000,
+                            onClose: () => {
+                                location.href = '/';
+                            }
+                        }).then((result) => {
+
+                        });
+                    });
+                });
+            });
+
+</script>
+</div>
+{% endblock %}

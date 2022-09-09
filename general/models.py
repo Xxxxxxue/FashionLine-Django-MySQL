@@ -83,8 +83,9 @@ class Clientes(models.Model):
     cif = models.CharField(db_column='CIF', max_length=9, blank=True, null=True)  # Field name made lowercase.
     cuenta = models.CharField(db_column='Cuenta', max_length=24, blank=True, null=True)  # Field name made lowercase.
     descripcion = models.TextField(db_column='descripcion', blank=True, null=True)
-    icon = models.ImageField(db_column='icon', upload_to='icon',  null=True)
+    icon = models.ImageField(db_column='icon', upload_to='icon',  null=True, default='/static/imagenes/user_icon.svg')
     idusuario = models.ForeignKey(User, db_column='idUsuario', blank=True, null=True, on_delete=models.CASCADE)
+    token = models.UUIDField(primary_key=False, editable=False, null=True, blank=True)
 
     def delete(self, *args, **kwargs):
         try:

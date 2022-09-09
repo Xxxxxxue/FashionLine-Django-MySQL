@@ -7,6 +7,7 @@ urlpatterns = [
 
     # user
     path('user/', include('gestion_user.urls')),
+    path('email/', include('email_reset.urls')),
 
     # general page
     path('', views.home, name='home'),

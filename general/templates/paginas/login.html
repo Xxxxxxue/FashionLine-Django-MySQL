@@ -21,7 +21,7 @@
             </div>
 
             <button type="submit" class="btn btn-success">Acceder</button>
-            <a class="mx-4" href="">¿No recuerdas tu contraseña?</a>
+            <a class="mx-4" href="{% url 'reset_password' %}">¿No recuerdas tu contraseña?</a>
             <a href="/register">¿No tienes cuenta?</a>
 
             <p class="error">{{error_msg}}</p>
