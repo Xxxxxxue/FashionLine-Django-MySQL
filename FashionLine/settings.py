@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-na_e&f6b0=q1abl5g)1a7h)^l&uslntkv!7&47h&(=%u#cc!&k
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['10.0.2.2','127.0.0.1']
 
 
 # Application definition
@@ -40,7 +40,15 @@ INSTALLED_APPS = [
     'general.apps.GeneralConfig',
     'gestion_user.apps.GestionUserConfig',
     'email_reset.apps.EmailResetConfig',
+    'rest_framework',
+    'flutter',
+
 ]
+REST_FRAMEWORK = { # rest_framework abierto totalmente sin ningun permiso
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ]
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

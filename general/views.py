@@ -38,11 +38,18 @@ def home(request):
     promo = models.Promociones.objects.filter(ffin__gte=fecha)
     imagenes = models.Imagenes.objects.filter(nombre='slider')
 
-    slider = []
-    slider += imagenes
-    slider += promo
+    slider = imagenes
+
+    if(promo):
+        for p in promo:
+            slider=[]
+            slider.append(p.imagen)
+            print(p.imagen)
+        if(len(slider) < 2):
+            slider.extend(imagenes)
 
     print(slider)
+    slider.reverse()
     # print(promo[0].ffin, fecha)
     idcesta = []
     grupo = []
@@ -1149,8 +1156,4 @@ def filtro(request,tip,fc,ft,fv,fcad,fp,sexo,page):
                                                      'pagelist': pagelist, 'fc': fc, 'ft': ft, 'fv': fv,
                                                      'num': num,'paginacion_url': url,
                                                       'disenos': d_pagination['page_productos'],})
-
-
-
-
 

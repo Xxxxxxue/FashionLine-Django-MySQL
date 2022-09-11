@@ -5,6 +5,9 @@ from django.conf import settings
 
 urlpatterns = [
 
+    #flutter
+    path('api/', include('flutter.urls')),
+
     # user
     path('user/', include('gestion_user.urls')),
     path('email/', include('email_reset.urls')),
@@ -18,13 +21,15 @@ urlpatterns = [
 
     path('product/<slug:sexo>/<int:page>', views.producto, name='producto'),
     path('product/<slug:tipo>/<slug:sexo>/<int:page>/', views.producto_filtro_tipo, name='producto-filtro-tipo'),
-    path('product/<slug:tipo>/<slug:categoria>/<slug:sexo>/<int:page>/', views.producto_filtro_categoria, name='producto-filtro-categoria'),
+    path('product/<slug:tipo>/<slug:categoria>/<slug:sexo>/<int:page>/', views.producto_filtro_categoria,
+         name='producto-filtro-categoria'),
     path('product_detail/<int:id>', views.producto_detalle),
     path('productcli/<int:iduser>/<slug:sexo>/<int:page>', views.producto_user),
 
     path('disign/<slug:sexo>/<int:page>', views.diseno),
     path('disign/<slug:tipo>/<slug:sexo>/<int:page>/', views.diseno_filtro_tipo, name='diseno-filtro-tipo'),
-    path('disign/<slug:tipo>/<slug:categoria>/<slug:sexo>/<int:page>/', views.diseno_filtro_categoria, name='diseno-filtro-categoria'),
+    path('disign/<slug:tipo>/<slug:categoria>/<slug:sexo>/<int:page>/', views.diseno_filtro_categoria,
+         name='diseno-filtro-categoria'),
     path('disign_detail/<int:id>', views.diseno_detalle),
     path('disigncli/<int:iduser>/<slug:sexo>/<int:page>', views.diseno_user),
 
@@ -36,13 +41,13 @@ urlpatterns = [
     path('message_chat/<int:iduser>/<int:id>', views.mensajeria_detalle),
     path('message_submit/<int:id>', views.mensajeria_submit),
 
-
     path('search/<slug:valor>/<slug:sexo>/<int:page>', views.search),
     path('filtro/<slug:tip>/<slug:fc>/<slug:ft>/<slug:fv>/<slug:fcad>/<slug:fp>/<slug:sexo>/<int:page>', views.filtro),
 
     path('cart/<int:id>', views.cesta),
     path('cart/compra/<int:id>', views.lineacesta),
     path('pagado/<int:id>', views.pagado),
+
 
 
 ]

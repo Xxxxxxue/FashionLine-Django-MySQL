@@ -486,7 +486,7 @@ class Promociones(models.Model):
     descripcion = models.TextField(db_column='Descripcion', blank=True, null=True)  # Field name made lowercase.
     finicio = models.DateTimeField(db_column='Finicio', blank=True, null=True)  # Field name made lowercase.
     ffin = models.DateTimeField(db_column='Ffin', blank=True, null=True)  # Field name made lowercase.
-    imagen = models.CharField(db_column='imagen', max_length=250, blank=True, null=True)  # Field name made lowercase.
+    imagen = models.ForeignKey(Imagenes,db_column='imagen', blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
 
     class Meta:
         ordering = ['id']
