@@ -38,11 +38,17 @@ def home(request):
     promo = models.Promociones.objects.filter(ffin__gte=fecha)
     imagenes = models.Imagenes.objects.filter(nombre='slider')
 
-    slider = []
-    slider += imagenes
-    slider += promo
+    slider = imagenes
 
+    if(promo):
+        for p in promo:
+            slider=[]
+            slider.append(p.imagen)
+
+    if(len(slider) < 3):
+        slider += imagenes
     print(slider)
+    slider.reverse()
     # print(promo[0].ffin, fecha)
     idcesta = []
     grupo = []

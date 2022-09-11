@@ -486,7 +486,7 @@ class Promociones(models.Model):
     descripcion = models.TextField(db_column='Descripcion', blank=True, null=True)  # Field name made lowercase.
     finicio = models.DateTimeField(db_column='Finicio', blank=True, null=True)  # Field name made lowercase.
     ffin = models.DateTimeField(db_column='Ffin', blank=True, null=True)  # Field name made lowercase.
-    imagen = models.CharField(db_column='imagen', max_length=250, blank=True, null=True)  # Field name made lowercase.
+    imagen = models.ForeignKey(Imagenes,db_column='imagen', blank=True, null=True,on_delete=models.CASCADE)  # Field name made lowercase.
 
     class Meta:
         ordering = ['id']
@@ -550,20 +550,20 @@ class Tipocategoria(models.Model):
         db_table = 'tipocategoria'
 
 
-
-class Usuarios(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    usuario = models.CharField(max_length=45)
-    contrasena = models.CharField(max_length=50)
-    tipousuario = models.IntegerField(db_column='tipoUsuario', default=0 )  # Field name made lowercase.
-    idclientes = models.ForeignKey(Clientes, db_column='idClientes', blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
-
-    def __str__(self):
-        return "( " + str(self.id) + " ) - " + self.usuario
-
-    class Meta:
-        ordering = ['id']
-        db_table = 'usuarios'
+### NO USAMOS
+# class Usuarios(models.Model):
+#     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+#     usuario = models.CharField(max_length=45)
+#     contrasena = models.CharField(max_length=50)
+#     tipousuario = models.IntegerField(db_column='tipoUsuario', default=0 )  # Field name made lowercase.
+#     idclientes = models.ForeignKey(Clientes, db_column='idClientes', blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
+#
+#     def __str__(self):
+#         return "( " + str(self.id) + " ) - " + self.usuario
+#
+#     class Meta:
+#         ordering = ['id']
+#         db_table = 'usuarios'
 
 
 
