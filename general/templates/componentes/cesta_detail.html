@@ -14,7 +14,11 @@
                             <th scope="col">Precio</th>
                             <th scope="col">Cantidad</th>
                             <th scope="col">Total</th>
+                            {%if 'cart' in request.path%}
                             <th scope="col">Delete</th>
+                            {%else%}
+                            <th scope="col">Estado</th>
+                            {%endif%}
                         </tr>
                         </thead>
                         <tbody class="table-body">
@@ -37,7 +41,11 @@
                                 </div>
                             </td>
                             <td>{{c.total}} €</td>
+                             {%if 'cart' in request.path%}
                             <td><button type="submit" class="btn btn-success">Delete</button></td>
+                            {%else%}
+                            <td>{{c.idestado.estado}}</td>
+                            {%endif%}
                         </t1r>
                         </form>
                         {%endfor%}

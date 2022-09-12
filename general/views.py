@@ -709,6 +709,22 @@ def agenda_detalle(request, id):
     for d in disenos:
         imgd += models.Disenoimagen.objects.filter(iddiseno=d)[:1]
 
+        # contactar
+    misala = []
+    try:
+        misala = models.Salausuario.objects.filter(idusuario=pcliente.idusuario)
+        for m in misala:
+            n = models.Salausuario.objects.filter(idsala=m.idsala).filter(idusuario=request.user).get()
+            if (n):
+                misala = n
+        if not misala:
+            models.Salas.objects.create(fecha=timezone.now())
+            misala = models.Salas.objects.last()
+            models.Salausuario.objects.create(idsala=misala, idusuario=pcliente.idusuario)
+            models.Salausuario.objects.create(idsala=misala, idusuario=request.user)
+    except models.Salausuario.DoesNotExist:
+        None
+
     idcesta = []
     grupo = []
     if request.user.username:
@@ -716,7 +732,7 @@ def agenda_detalle(request, id):
         grupo = request.user.groups.first()
         grupo = grupo.name
 
-    return render(request, "paginas/agenda_detalle.html", {'tipo': tipocad, 'categorias': categorias, 'grupo':grupo,
+    return render(request, "paginas/agenda_detalle.html", {'tipo': tipocad, 'categorias': categorias, 'grupo':grupo, 'misala': misala,
                                                             'slider': slider,'productos': productos, 'idcesta': idcesta,
                                                            'disenos': disenos, 'cliente': pcliente, 'categoria': cad,
                                                            'imgp':imgp, 'imgd': imgd, 'direccion': direccion})

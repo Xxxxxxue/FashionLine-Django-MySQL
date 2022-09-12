@@ -204,16 +204,18 @@ def pedidos(request):
 
     #empresas
     prod = models.Productos.objects.filter(idusuario=request.user)
-    print(prod)
+    # print(prod)
+    est = models.Estados.objects.filter(estado='pagado').get()
+    print(est)
     lcestas=[]
-    for p in prod:
-        try:
-            lps = models.Lineacesta.objects.filter(idproducto=p)
-            for lp in lps:
-                lcestas.append(lp)
-        except models.Lineacesta.DoesNotExist:
-            print('none')
-        print(lcestas)
+    try:
+        cestapagado = models.Cestas.objects.filter(idestado=est)
+        print(cestapagado)
+        lcestas = models.Lineacesta.objects.filter(idcesta__in=cestapagado).filter(idproducto__in=prod)
+
+    except models.Cestas.DoesNotExist:
+        print('none')
+    print(lcestas)
 
     idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
 
@@ -227,7 +229,7 @@ def pedidos_detalle(request, id):
     cesta = models.Cestas.objects.filter(id=id).get()
     count = cesta.getLinea().count()
     grupo = request.user.groups.first()
-    idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente)
+    idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
     return render(request, "paginas/user_pedidos_detalle.html", {'color': color, 'talla': talla,
                                                    'valoracion': valoracion, 'tipo': tipocad, 'grupo': grupo.name,
                                                    'categorias': categorias,'cesta': cesta, 'count': count,'idcesta':idcesta})
