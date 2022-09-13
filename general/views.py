@@ -296,21 +296,6 @@ def producto_detalle(request, id):
     cli = models.Clientes.objects.filter(idusuario=productos.idusuario).get()
     tip = "producto"
 
-    # contactar
-    misala = []
-    try:
-        misala = models.Salausuario.objects.filter(idusuario=productos.idusuario)
-        for m in misala:
-            n = models.Salausuario.objects.filter(idsala=m.idsala).filter(idusuario=request.user).get()
-            if(n):
-                misala = n
-        if not misala:
-            models.Salas.objects.create(fecha=timezone.now())
-            misala = models.Salas.objects.last()
-            models.Salausuario.objects.create(idsala=misala, idusuario=productos.idusuario)
-            models.Salausuario.objects.create(idsala=misala, idusuario=request.user)
-    except models.Salausuario.DoesNotExist:
-        None
 
     # o sacamos talla y color por aqui, o por model.py que he creado unos metodos
     # contenido = models.Productocontenido.objects.filter(idproducto=productos)
@@ -327,10 +312,26 @@ def producto_detalle(request, id):
 
     idcesta = []
     grupo = []
+    # contactar
+    misala = []
     if request.user.username:
         idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
         grupo = request.user.groups.first()
         grupo = grupo.name
+
+        try:
+            misala = models.Salausuario.objects.filter(idusuario=productos.idusuario)
+            for m in misala:
+                n = models.Salausuario.objects.filter(idsala=m.idsala).filter(idusuario=request.user).get()
+                if (n):
+                    misala = n
+            if not misala:
+                models.Salas.objects.create(fecha=timezone.now())
+                misala = models.Salas.objects.last()
+                models.Salausuario.objects.create(idsala=misala, idusuario=productos.idusuario)
+                models.Salausuario.objects.create(idsala=misala, idusuario=request.user)
+        except models.Salausuario.DoesNotExist:
+            None
 
     return render(request, "paginas/producto_detalle.html", {'color': color, 'talla': talla, 'idcesta': idcesta,'grupo': grupo,'cli':cli,
                                                      'valoracion': valoracion, 'tipo': tipocad, 'total': total,'totalcolor':totalcolor,
@@ -492,6 +493,7 @@ def diseno_filtro_categoria(request, sexo, page, tipo, categoria):
         idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
         grupo = request.user.groups.first()
         grupo = grupo.name
+
     return render(request, "paginas/diseno.html", {'color': color, 'talla': talla, 'sexos': sexos, 'sexo': sexo,
                                                      'valoracion': valoracion, 'tipo': tipocad, 'grupo':grupo,
                                                      'categorias': categorias, 'idcesta': idcesta,
@@ -528,28 +530,7 @@ def diseno_detalle(request, id):
     cli = models.Clientes.objects.filter(idusuario=productos.idusuario).get()
     tip ="diseno"
 
-    # contactar
-    misala = []
-    try:
-        misala = models.Salausuario.objects.filter(idusuario=productos.idusuario)
-        for m in misala:
-            n = models.Salausuario.objects.filter(idsala=m.idsala).filter(idusuario=request.user).get()
-            if (n):
-                misala = n
-        if not misala:
-            models.Salas.objects.create(fecha=timezone.now())
-            misala = models.Salas.objects.last()
-            models.Salausuario.objects.create(idsala=misala, idusuario=productos.idusuario)
-            models.Salausuario.objects.create(idsala=misala, idusuario=request.user)
-    except models.Salausuario.DoesNotExist:
-        None
 
-    # me gusta
-    g=[]
-    try:
-        g = models.Gustodiseno.objects.filter(iddiseno=productos).filter(idusuario=request.user).get()
-    except models.Gustodiseno.DoesNotExist:
-        print('none')
     valoraciones = models.Disenovalora.objects.filter(iddiseno=productos)
     listValora = {}
     media = 0
@@ -560,10 +541,33 @@ def diseno_detalle(request, id):
 
     idcesta = []
     grupo = []
+    # contactar
+    misala = []
+    # me gusta
+    g = []
     if request.user.username:
         idcesta = models.Cestas.objects.filter(idusuario=request.user).filter(idestado=ependiente).get()
         grupo = request.user.groups.first()
         grupo = grupo.name
+
+        try:
+            misala = models.Salausuario.objects.filter(idusuario=productos.idusuario)
+            for m in misala:
+                n = models.Salausuario.objects.filter(idsala=m.idsala).filter(idusuario=request.user).get()
+                if (n):
+                    misala = n
+            if not misala:
+                models.Salas.objects.create(fecha=timezone.now())
+                misala = models.Salas.objects.last()
+                models.Salausuario.objects.create(idsala=misala, idusuario=productos.idusuario)
+                models.Salausuario.objects.create(idsala=misala, idusuario=request.user)
+        except models.Salausuario.DoesNotExist:
+            None
+
+        try:
+            g = models.Gustodiseno.objects.filter(iddiseno=productos).filter(idusuario=request.user).get()
+        except models.Gustodiseno.DoesNotExist:
+            print('none')
     return render(request, "paginas/diseno_detalle.html", {'color': color, 'talla': talla, 'idcesta': idcesta, 'grupo':grupo,
                                                              'valoracion': valoracion, 'tipo': tipocad,'g':g, 'cli':cli, 'tip': tip,
                                                              'categorias': categorias, 'producto': productos, 'misala': misala,
